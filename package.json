@@ -1,0 +1,25 @@
+{
+  "name": "uxsearch-api",
+  "version": "1.0.0",
+  "description": "UX Search API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uxsearch/uxsearch_api.git"
+  },
+  "keywords": [
+    "uxsearch"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uxsearch/uxsearch_api/issues"
+  },
+  "homepage": "https://github.com/uxsearch/uxsearch_api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
