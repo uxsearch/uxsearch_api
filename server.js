@@ -9,7 +9,7 @@ app.listen(port, function () {
   console.log('Ready on http://localhost:', port)
 })
 
-app.use('api', router)
+app.use('/api', router)
 app.use(express.json())
 
 export default app

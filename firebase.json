@@ -1,6 +1,9 @@
 {
   "database": {
-    "rules": "database.rules.json"
+    "rules": {
+      ".read": false,
+      ".write": false
+    }
   },
   "firestore": {
     "rules": "firestore.rules",
