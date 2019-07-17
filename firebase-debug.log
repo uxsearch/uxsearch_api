@@ -1,42 +1,9 @@
-[debug] [2019-07-16T06:11:34.049Z] ----------------------------------------------------------------------
-[debug] [2019-07-16T06:11:34.051Z] Command:       /usr/local/Cellar/node/12.6.0/bin/node /usr/local/bin/firebase serve
-[debug] [2019-07-16T06:11:34.051Z] CLI Version:   7.1.0
-[debug] [2019-07-16T06:11:34.051Z] Platform:      darwin
-[debug] [2019-07-16T06:11:34.051Z] Node Version:  v12.6.0
-[debug] [2019-07-16T06:11:34.057Z] Time:          Tue Jul 16 2019 13:11:34 GMT+0700 (Indochina Time)
-[debug] [2019-07-16T06:11:34.058Z] ----------------------------------------------------------------------
+[debug] [2019-07-17T05:19:51.732Z] ----------------------------------------------------------------------
+[debug] [2019-07-17T05:19:51.733Z] Command:       /usr/local/Cellar/node/12.6.0/bin/node /usr/local/bin/firebase login
+[debug] [2019-07-17T05:19:51.734Z] CLI Version:   7.1.0
+[debug] [2019-07-17T05:19:51.734Z] Platform:      darwin
+[debug] [2019-07-17T05:19:51.734Z] Node Version:  v12.6.0
+[debug] [2019-07-17T05:19:51.734Z] Time:          Wed Jul 17 2019 12:19:51 GMT+0700 (Indochina Time)
+[debug] [2019-07-17T05:19:51.734Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2019-07-16T06:11:34.066Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2019-07-16T06:11:34.067Z] > authorizing via signed-in user
-[debug] [2019-07-16T06:11:34.067Z] [iam] checking project uxsearchcloud-cc545 for permissions ["firebase.projects.get"]
-[debug] [2019-07-16T06:11:34.068Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2019-07-16T06:11:34.069Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- <request body omitted>
-[debug] [2019-07-16T06:11:34.372Z] <<< HTTP RESPONSE 200
-[debug] [2019-07-16T06:11:34.387Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/uxsearchcloud-cc545:testIamPermissions  
-
-[debug] [2019-07-16T06:11:35.832Z] <<< HTTP RESPONSE 200
-[debug] [2019-07-16T06:11:35.833Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/uxsearchcloud-cc545  
- 
-[debug] [2019-07-16T06:11:36.492Z] <<< HTTP RESPONSE 200
-[info] 
-[info] === Serving from '/Users/joey.w/Documents/KMUTT/Project/uxsearch_api'...
-[info] 
-[debug] [2019-07-16T06:11:36.502Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/uxsearchcloud-cc545/webApps/-/config  
- 
-[debug] [2019-07-16T06:11:36.819Z] TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received type undefined
-    at validateString (internal/validators.js:107:11)
-    at Object.join (path.js:1037:7)
-    at new FunctionsEmulator (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulator.js:43:34)
-    at Object.<anonymous> (/usr/local/lib/node_modules/firebase-tools/lib/serve/functions.js:40:71)
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/serve/functions.js:7:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/serve/functions.js:3:12)
-    at Object.start (/usr/local/lib/node_modules/firebase-tools/lib/serve/functions.js:16:16)
-    at /usr/local/lib/node_modules/firebase-tools/lib/serve/index.js:15:23
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2019-07-16T06:11:36.936Z] <<< HTTP RESPONSE 200
-[info] i  hosting: Serving hosting files from: public
-[info] ✔  hosting: Local server: http://localhost:5000
+[info] Already logged in as wasin.wj@mail.kmutt.ac.th

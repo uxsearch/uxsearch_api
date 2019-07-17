@@ -1,11 +1,17 @@
-// import express from 'express'
-// import admin from 'firebase-admin'
+import firebase from 'api/firebase-config'
+import { db } from 'api/firebasehelper'
 
-// admin.initializeApp({
-//   credential: admin.credential.applicationDefault()
-// })
+const collectionName = 'uxers'
 
-// const db = admin.firestore()
+export async function getAll() {
+  const query = await db.collection(collectionName).get()
+  let user = []
+  query.forEach(snapshot => {
+    user = [...user, { id: snapshot.id, data: snapshot.data()}]
+  })
+  return user
+}
 
-// const router = express.Router()
+// export async function createUxer() {
 
+// }

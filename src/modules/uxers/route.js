@@ -1,5 +1,5 @@
 import express from 'express'
-import uxersController from './controller'
+import uxersController from 'api/modules/uxers/controller'
 
 const router = express.Router()
 
