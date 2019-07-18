@@ -7,7 +7,10 @@ async function getAll() {
   const ref = await db.collection(collectionName).get()
   let uxers = []
   ref.forEach(snapshot => {
-    uxers = [...uxers, { id: snapshot.id, data: snapshot.data()}]
+    uxers = [...uxers, { 
+      id: snapshot.id, 
+      data: snapshot.data()
+    }]
   })
   return uxers
 }
