@@ -23,4 +23,15 @@ async function getExperimentById( experimentId ) {
   return experimenter
 }
 
-export { getAll, getExperimentById }
+async function createExperimenter({ name, age, gender, tel, email, province, country, job, educate, lifestyle }) {
+  const created_at = new Date()
+  const ref = await db.collection(collectionName).add({ name, age, gender, tel, email, province, country, job, educate, lifestyle, created_at })
+  const snapshot = await db.collection(collectionName).doc(ref.id).get()
+  let experimenter = {
+    'id': snapshot.id,
+    'data': snapshot.data()
+  }
+  return experimenter
+}
+
+export { getAll, getExperimentById, createExperimenter }
