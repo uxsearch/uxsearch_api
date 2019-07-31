@@ -1,6 +1,7 @@
 import express from 'express'
 import uxersController from 'api/modules/uxers/controller'
 import projectController from 'api/modules/uxers/projects/controller'
+import questionnaireController from 'api/modules/uxers/projects/questionnaires/controller'
 
 const router = express.Router()
 
@@ -13,5 +14,7 @@ router.get('/:id/projects', projectController.getProjectByUxerId)
 router.get('/:id/project/:proj_id', projectController.getOne)
 router.post('/:id/project/add', projectController.create)
 router.put('/:id/project/:proj_id/edit', projectController.update)
+
+router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 
 export default router
