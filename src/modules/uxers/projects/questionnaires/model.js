@@ -16,8 +16,21 @@ async function getQuestionnaire (uxerId, projectId) {
       data: sanpshot.data()
     }]
   })
-  console.log(questionnaires)
   return questionnaires
 }
 
-export { getQuestionnaire }
+async function getNote (uxerId, projectId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).where('type_question', '==', 'note').get()
+  let notes = []
+  ref.forEach(sanpshot => {
+    notes = [...notes, {
+      id: sanpshot.id,
+      data: sanpshot.data()
+    }]
+  })
+  return notes
+}
+
+export { getQuestionnaire, getNote }

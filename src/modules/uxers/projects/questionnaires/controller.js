@@ -1,4 +1,4 @@
-import { getQuestionnaire } from 'api/modules/uxers/projects/questionnaires/model'
+import { getQuestionnaire, getNote } from 'api/modules/uxers/projects/questionnaires/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -13,5 +13,11 @@ export default {
     const projectId = req.params.proj_id
     const questionnaires = await getQuestionnaire(uxerId, projectId)
     res.send(questionnaires)
+  },
+  getNote: async (req, res) => {
+    const uxerId = req.params.id
+    const projectId = req.params.proj_id
+    const notes = await getNote(uxerId, projectId)
+    res.send(notes)
   }
 }

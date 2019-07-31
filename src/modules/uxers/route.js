@@ -16,5 +16,6 @@ router.post('/:id/project/add', projectController.create)
 router.put('/:id/project/:proj_id/edit', projectController.update)
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
+router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
 
 export default router
