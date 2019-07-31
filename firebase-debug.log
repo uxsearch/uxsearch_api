@@ -1,9 +1,0 @@
-[debug] [2019-07-17T05:19:51.732Z] ----------------------------------------------------------------------
-[debug] [2019-07-17T05:19:51.733Z] Command:       /usr/local/Cellar/node/12.6.0/bin/node /usr/local/bin/firebase login
-[debug] [2019-07-17T05:19:51.734Z] CLI Version:   7.1.0
-[debug] [2019-07-17T05:19:51.734Z] Platform:      darwin
-[debug] [2019-07-17T05:19:51.734Z] Node Version:  v12.6.0
-[debug] [2019-07-17T05:19:51.734Z] Time:          Wed Jul 17 2019 12:19:51 GMT+0700 (Indochina Time)
-[debug] [2019-07-17T05:19:51.734Z] ----------------------------------------------------------------------
-[debug] 
-[info] Already logged in as wasin.wj@mail.kmutt.ac.th
