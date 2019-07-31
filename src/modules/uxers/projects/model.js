@@ -16,6 +16,15 @@ async function getProjectByUxerId(uxerId) {
   return projects
 }
 
+async function getOneProject(uxerId, projectId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId).collection(collectionProject).doc(projectId).get()
+  let project = {
+    id: ref.id,
+    data: ref.data()
+  }
+  return project
+}
+
 async function updateProject(uxerId, projectId, { name, cover_url }) {
   const updated_at = new Date()
   const ref = await db.collection(collectionUxer).doc(uxerId).collection(collectionProject).doc(projectId).set({ name, cover_url, updated_at}, {merge: true})
@@ -39,4 +48,4 @@ async function createProject(uxerId, { name, cover_url, file_url, link_url }) {
   return project
 }
 
-export { getProjectByUxerId, createProject, updateProject }
+export { getProjectByUxerId, getOneProject, createProject, updateProject }

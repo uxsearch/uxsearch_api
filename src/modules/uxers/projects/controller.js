@@ -1,4 +1,4 @@
-import { getProjectByUxerId, createProject, updateProject } from 'api/modules/uxers/projects/model'
+import { getProjectByUxerId, getOneProject, createProject, updateProject } from 'api/modules/uxers/projects/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -11,6 +11,12 @@ export default {
   getProjectByUxerId: async (req, res) => {
     const uxerId = req.params.id
     const projects = await getProjectByUxerId(uxerId)
+    res.send(projects)
+  },
+  getOne: async (req, res) => {
+    const uxerId = req.params.id
+    const projectId = req.params.proj_id
+    const projects = await getOneProject(uxerId, projectId)
     res.send(projects)
   },
   update: async (req, res) => {

@@ -10,6 +10,7 @@ router.post('/add', uxersController.create)
 router.put('/:id/edit', uxersController.update)
 
 router.get('/:id/projects', projectController.getProjectByUxerId)
+router.get('/:id/project/:proj_id', projectController.getOne)
 router.post('/:id/project/add', projectController.create)
 router.put('/:id/project/:proj_id/edit', projectController.update)
 
