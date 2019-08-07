@@ -24,5 +24,6 @@ router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQue
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOneAnswer)
+router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question', answerQuestionController.createAnswer)
 
 export default router
