@@ -8,7 +8,7 @@ const statusCallback = {
 }
 
 export default {
-  getOneAnswer: async (req, res) => {
+  getOne: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
@@ -16,7 +16,7 @@ export default {
     const answer = await getAnswerNote(uxerId, projectId, experimenterId, noteId)
     res.send(answer)
   },
-  updateAnswer: async (req, res) => {
+  update: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
@@ -29,7 +29,7 @@ export default {
       res.send({ status: statusCallback.ERROR })
     }
   },
-  createAnswer: async (req, res) => {
+  create: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id

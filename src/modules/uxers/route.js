@@ -11,24 +11,24 @@ const router = express.Router()
 router.get('/', uxersController.getAll)
 router.get('/:id', uxersController.getUxerById)
 router.post('/add', uxersController.create)
-router.put('/:id/edit', uxersController.update)
+router.put('/:id/update', uxersController.update)
 
 router.get('/:id/projects', projectController.getProjectByUxerId)
 router.get('/:id/project/:proj_id', projectController.getOne)
 router.post('/:id/project/add', projectController.create)
-router.put('/:id/project/:proj_id/edit', projectController.update)
+router.put('/:id/project/:proj_id/update', projectController.update)
 
 router.get('/:id/project/:proj_id/experimenters', experimentController.getAll)
-router.post('/:id/project/:proj_id/record', experimentController.insertRecord)
+router.post('/:id/project/:proj_id/record', experimentController.createRecord)
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
 
-router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOneAnswer)
-router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question/add', answerQuestionController.createAnswer)
+router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
+router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question/add', answerQuestionController.create)
 
-router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', answerNoteController.getOneAnswer)
-router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-note/add', answerNoteController.createAnswer)
-router.put('/:id/project/:proj_id/experimenter/:exper_id/answer/:ans_id/update', answerNoteController.updateAnswer)
+router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', answerNoteController.getOne)
+router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-note/add', answerNoteController.create)
+router.put('/:id/project/:proj_id/experimenter/:exper_id/answer/:ans_id/update', answerNoteController.update)
 
 export default router
