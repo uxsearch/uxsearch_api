@@ -14,7 +14,7 @@ export default {
     const experimenters = await getExperimenterTest(uxerId, projectId)
     res.send(experimenters)
   },
-  insertRecord: async (req, res) => {
+  createRecord: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const { experimenter_key, firstname, lastname, video_url, video_time, screen_url, screen_time } = req.body
