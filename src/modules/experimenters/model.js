@@ -15,7 +15,7 @@ async function getAll() {
   return experimenters
 }
 
-async function getExperimentById( experimentId ) {
+async function getExperimentById(experimentId) {
   const ref = await db.collection(collectionName).doc(experimentId).get()
   let experimenter = {
     'data': ref.data()
@@ -23,9 +23,10 @@ async function getExperimentById( experimentId ) {
   return experimenter
 }
 
-async function createExperimenter({ name, age, gender, tel, email, province, country, job, educate, lifestyle }) {
+async function createExperimenter({ firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle }) {
   const created_at = new Date()
-  const ref = await db.collection(collectionName).add({ name, age, gender, tel, email, province, country, job, educate, lifestyle, created_at })
+  age = parseInt(age)
+  const ref = await db.collection(collectionName).add({ firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle, created_at })
   const snapshot = await db.collection(collectionName).doc(ref.id).get()
   let experimenter = {
     'id': snapshot.id,
