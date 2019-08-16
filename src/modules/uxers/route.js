@@ -18,6 +18,7 @@ router.get('/:id/projects', projectController.getProjectByUxerId)
 router.get('/:id/project/:proj_id', projectController.getOne)
 router.post('/:id/project/add', projectController.create)
 router.put('/:id/project/:proj_id/update', projectController.update)
+router.delete('/:id/project/:proj_id/delete', projectController.delete)
 
 router.get('/:id/project/:proj_id/experimenters', experimentController.getAll)
 router.post('/:id/project/:proj_id/record', experimentController.createRecord)
