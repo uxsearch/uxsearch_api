@@ -12,6 +12,7 @@ router.get('/', uxersController.getAll)
 router.get('/:id', uxersController.getUxerById)
 router.post('/add', uxersController.create)
 router.put('/:id/update', uxersController.update)
+router.delete('/:id/delete', uxersController.delete)
 
 router.get('/:id/projects', projectController.getProjectByUxerId)
 router.get('/:id/project/:proj_id', projectController.getOne)
