@@ -32,7 +32,7 @@ export default {
     const { name, company } = req.body
     if (_.isString(name) && _.isString(company)) {
       const uxers = await createUxer({ name, company })
-      res.send({ status: uxers ? statusCallback.SUCCESS : statusCallback.ERROR, uxers })
+      res.status(201).send({ status: uxers ? statusCallback.SUCCESS : statusCallback.ERROR, uxers })
     } else {
       res.send({ status: statusCallback.ERROR })
     }
