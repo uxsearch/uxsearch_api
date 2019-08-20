@@ -20,4 +20,13 @@ async function getOptions(uxerId, projectId, questionId) {
   return options
 }
 
-export { getOptions }
+async function deleteOption(uxerId, projectId, questionId, optionId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).collection(questionId)
+    .collection(collectionOption).doc(optionId).delete()
+  if(ref === undefined) return 0
+  else return 1
+}
+
+export { getOptions, deleteOption }
