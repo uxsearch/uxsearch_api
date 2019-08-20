@@ -35,4 +35,10 @@ async function createExperimenter({ firstname, lastname, age, gender, tel, email
   return experimenter
 }
 
-export { getAll, getExperimentById, createExperimenter }
+async function deleteExperimentProfile(experId) {
+  const ref = await db.collection(collectionName).doc(experId).delete()
+  if(ref === undefined) return 0
+  else return 1
+}
+
+export { getAll, getExperimentById, createExperimenter, deleteExperimentProfile }
