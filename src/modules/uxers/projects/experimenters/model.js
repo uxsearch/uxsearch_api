@@ -34,4 +34,12 @@ async function createExperimentRecord(uxerId, projectId, { experimenter_key, fir
   return record
 }
 
-export { getExperimenterTest, createExperimentRecord }
+async function deleteExperimenter(uxerId, projectId, experId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionExperiment).doc(experId).delete()
+  if(ref === undefined) return 0
+  else return 1
+}
+
+export { getExperimenterTest, createExperimentRecord, deleteExperimenter }
