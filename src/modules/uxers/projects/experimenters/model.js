@@ -1,5 +1,6 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
+import { deleteExperimentProfile } from '../../../experimenters/model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -19,6 +20,13 @@ async function getExperimenterTest(uxerId, projectId) {
   return experimenters
 }
 
+async function getExperimenterKey(uxerId, projectId, experId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionExperiment).doc(experId).get()
+  return ref.data().experimenter_key
+}
+
 async function createExperimentRecord(uxerId, projectId, { experimenter_key, firstname, lastname, video_url, video_time, screen_url, screen_time }) {
   const created_at = new Date()
   const ref = await db.collection(collectionUxer).doc(uxerId)
@@ -34,4 +42,16 @@ async function createExperimentRecord(uxerId, projectId, { experimenter_key, fir
   return record
 }
 
-export { getExperimenterTest, createExperimentRecord }
+async function deleteExperimenter(uxerId, projectId, experId) {
+  const experKey = await getExperimenterKey(uxerId, projectId, experId)
+  console.log(experKey)
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionExperiment).doc(experId).delete()
+
+  const refExperimentProfile = await deleteExperimentProfile(experKey)
+  if (ref === undefined && refExperimentProfile === 0) return 0
+  else return 1
+}
+
+export { getExperimenterTest, createExperimentRecord, deleteExperimenter }

@@ -1,4 +1,4 @@
-import { getExperimenterTest, createExperimentRecord } from 'api/modules/uxers/projects/experimenters/model'
+import { getExperimenterTest, createExperimentRecord, deleteExperimenter } from 'api/modules/uxers/projects/experimenters/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -30,5 +30,12 @@ export default {
     } else {
       res.send({ status: statusCallback.ERROR })
     }
+  },
+  delete: async (req, res) => {
+    const uxerId = req.params.id
+    const projectId = req.params.proj_id
+    const experId = req.params.exper_id
+    const haveExperiment = await deleteExperimenter(uxerId, projectId, experId)
+    res.send({ status: haveExperiment === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
   }
 }

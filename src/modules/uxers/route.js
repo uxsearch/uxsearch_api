@@ -12,14 +12,17 @@ router.get('/', uxersController.getAll)
 router.get('/:id', uxersController.getUxerById)
 router.post('/add', uxersController.create)
 router.put('/:id/update', uxersController.update)
+router.delete('/:id/delete', uxersController.delete)
 
 router.get('/:id/projects', projectController.getProjectByUxerId)
 router.get('/:id/project/:proj_id', projectController.getOne)
 router.post('/:id/project/add', projectController.create)
 router.put('/:id/project/:proj_id/update', projectController.update)
+router.delete('/:id/project/:proj_id/delete', projectController.delete)
 
 router.get('/:id/project/:proj_id/experimenters', experimentController.getAll)
 router.post('/:id/project/:proj_id/record', experimentController.createRecord)
+router.delete('/:id/project/:proj_id/experimenter/:exper_id', experimentController.delete)
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
