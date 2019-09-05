@@ -31,7 +31,7 @@ export default {
     _.isString(educate) && 
     _.isString(lifestyle)) {
       const experimenter = await createExperimenter ({ firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle })
-      res.send({ status: experimenter ? statusCallback.SUCCESS : statusCallback.ERROR, experimenter})
+      res.status(201).send({ status: experimenter ? statusCallback.SUCCESS : statusCallback.ERROR, experimenter})
     } else {
       res.send({ status : statusCallback.ERROR })
     }
