@@ -18,6 +18,8 @@ export default {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const notes = await getNote(uxerId, projectId)
+    console.log('cont', notes)
+    
     res.send(notes)
   }
 }
