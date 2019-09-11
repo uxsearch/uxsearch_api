@@ -1,43 +1,80 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
 import { getOptions } from './options/model'
+import { resolve } from 'dns';
+import { rejects } from 'assert';
+import { callbackify } from 'util';
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
 const collectionQuestionnaire = 'questionnaires'
 
 async function getQuestionnaire(uxerId, projectId) {
-  const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).where('type_question', '==', 'questionnaire').get()
   let questionnaires = []
-  ref.forEach(snapshot => {
-    questionnaires = [...questionnaires, {
-      id: snapshot.id,
-      data: snapshot.data()
-    }]
+  return new Promise((resolve, reject) => {
+    const ref = db.collection(collectionUxer).doc(uxerId)
+      .collection(collectionProject).doc(projectId)
+      .collection(collectionQuestionnaire).where('type_question', '==', 'questionnaire')
+      .get()
+    resolve(ref)
   })
-  return questionnaires
+  .then(result => {
+    return new Promise((resolve, reject) => {
+      let i = 0
+      result.forEach(async (snapshot) => {
+        const options = getOptions(uxerId, projectId, snapshot.id)
+        questionnaires.push({
+          id: snapshot.id,
+          data: {
+            question: snapshot.data(),
+            options: await options,
+          }
+        })
+        i++
+
+        if(i===result.size) {
+          resolve(questionnaires)
+        }
+      })
+    })
+    .then(result => {
+      return result
+    })
+  })
 }
 
 async function getNote(uxerId, projectId) {
   let notes = []
-  const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).where('type_question', '==', 'note').get()
-  ref.forEach(async snapshot => {
-    const options = await getOptions(uxerId, projectId, snapshot.id)
-    notes.push({
-      id: snapshot.id,
-      data: {
-        question: snapshot.data(),
-        options,
-      }
-    })
-    console.log('loop: ', notes)
+  return new Promise((resolve, reject) => {
+    const ref = db.collection(collectionUxer).doc(uxerId)
+      .collection(collectionProject).doc(projectId)
+      .collection(collectionQuestionnaire).where('type_question', '==', 'note')
+      .get()
+    resolve(ref)
   })
-  console.log('end: ', notes)
-  return notes
+  .then(result => {
+    return new Promise((resolve, reject) => {
+      let i = 0
+      result.forEach(async (snapshot) => {
+        const options = getOptions(uxerId, projectId, snapshot.id)
+        notes.push({
+          id: snapshot.id,
+          data: {
+            question: snapshot.data(),
+            options: await options,
+          }
+        })
+        i++
+
+        if(i===result.size) {
+          resolve(notes)
+        }
+      })
+    })
+    .then(result => {
+      return result
+    })
+  })
 }
 
 export { getQuestionnaire, getNote }
