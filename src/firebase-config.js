@@ -3,6 +3,7 @@ import admin from 'firebase-admin'
 
 import "firebase/auth";
 import "firebase/firestore";
+import 'firebase/storage'
 
 
 admin.initializeApp({
@@ -21,8 +22,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
-const db = firebase.firestore()
 
 export default firebase
 
