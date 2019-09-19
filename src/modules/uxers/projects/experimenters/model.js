@@ -1,5 +1,5 @@
 import firebase from 'api/firebase-config'
-import { db } from 'api/firebasehelper'
+import { db, bucket } from 'api/firebasehelper'
 import { deleteExperimentProfile } from '../../../experimenters/model'
 
 const collectionUxer = 'uxers'
@@ -42,9 +42,41 @@ async function createExperimentRecord(uxerId, projectId, { experimenter_key, fir
   return record
 }
 
+async function uploadFile(file) {
+  const date = new Date()
+  const name = `${date.getTime()}-${file.originalname}`
+
+  const metadata = {
+    contentType: 'video/webm'
+  }
+
+  return new Promise((resolve, rejects) => {
+    if(file.buffer instanceof Buffer === false) {
+      throw new Error('Invalide Object Buffer')
+    }
+
+    const fileBuffer = Buffer.from(file.buffer)
+
+    const blobStream = bucket.file(name).createWriteStream({
+      metadata: {
+        contentType: metadata.contentType
+      }
+    })
+
+    blobStream.on('error', (err) => {
+      throw new Error(err)
+    })
+
+    blobStream.on('finish', () => {
+      resolve()
+    })
+
+    blobStream.end(fileBuffer)
+  })
+}
+
 async function deleteExperimenter(uxerId, projectId, experId) {
   const experKey = await getExperimenterKey(uxerId, projectId, experId)
-  console.log(experKey)
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionExperiment).doc(experId).delete()
@@ -54,4 +86,4 @@ async function deleteExperimenter(uxerId, projectId, experId) {
   else return 1
 }
 
-export { getExperimenterTest, createExperimentRecord, deleteExperimenter }
+export { getExperimenterTest, createExperimentRecord, deleteExperimenter, uploadFile }
