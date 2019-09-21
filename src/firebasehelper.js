@@ -10,7 +10,6 @@ const butketUrl = process.env.FIREBASE_BUCKET_URL
 const storage = new Storage()
 const bucket = storage.bucket(butketUrl)
 
-
 export {
   db,
   auth,
