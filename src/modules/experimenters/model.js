@@ -23,10 +23,10 @@ async function getExperimentById(experimentId) {
   return experimenter
 }
 
-async function createExperimenter({ firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle }) {
+async function createExperimenter({ firstname, lastname, birthdate, gender, tel, email, province, country, job, educate, lifestyle }) {
   const created_at = new Date()
-  age = parseInt(age)
-  const ref = await db.collection(collectionName).add({ firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle, created_at })
+  birthdate = new Date(birthdate)
+  const ref = await db.collection(collectionName).add({ firstname, lastname, birthdate, gender, tel, email, province, country, job, educate, lifestyle, created_at })
   const snapshot = await db.collection(collectionName).doc(ref.id).get()
   let experimenter = {
     'id': snapshot.id,

@@ -18,10 +18,10 @@ export default {
     res.send(experimenter)
   },
   create: async (req, res) => {
-    const { firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle } = req.body
+    const { firstname, lastname, birthdate, gender, tel, email, province, country, job, educate, lifestyle } = req.body
     if (_.isString(firstname) && 
     _.isString(lastname) && 
-    _.isString(age) && 
+    _.isString(birthdate) && 
     _.isString(gender) && 
     _.isString(tel) && 
     _.isString(email) && 
@@ -30,7 +30,7 @@ export default {
     _.isString(job) && 
     _.isString(educate) && 
     _.isString(lifestyle)) {
-      const experimenter = await createExperimenter ({ firstname, lastname, age, gender, tel, email, province, country, job, educate, lifestyle })
+      const experimenter = await createExperimenter ({ firstname, lastname, birthdate, gender, tel, email, province, country, job, educate, lifestyle })
       res.status(201).send({ status: experimenter ? statusCallback.SUCCESS : statusCallback.ERROR, experimenter})
     } else {
       res.send({ status : statusCallback.ERROR })

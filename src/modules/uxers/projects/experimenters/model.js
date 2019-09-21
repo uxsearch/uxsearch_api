@@ -43,9 +43,6 @@ async function createExperimentRecord(uxerId, projectId, { experimenter_key, fir
 }
 
 async function uploadFile(file) {
-  const date = new Date()
-  const name = `${date.getTime()}-${file.originalname}`
-
   const metadata = {
     contentType: 'video/webm'
   }
@@ -54,15 +51,14 @@ async function uploadFile(file) {
     if(file.buffer instanceof Buffer === false) {
       throw new Error('Invalide Object Buffer')
     }
-
     const fileBuffer = Buffer.from(file.buffer)
-
-    const blobStream = bucket.file(name).createWriteStream({
+    
+    const blobStream = bucket.file(file.originalname).createWriteStream({
       metadata: {
         contentType: metadata.contentType
       }
     })
-
+        
     blobStream.on('error', (err) => {
       throw new Error(err)
     })
