@@ -26,7 +26,7 @@ export default {
       _.isString(screen_url) &&
       _.isNumber(screen_time)) {
       const record = await createExperimentRecord(uxerId, projectId, { experimenter_key, firstname, lastname, video_url, video_time, screen_url, screen_time })
-      res.send({ status: record ? statusCallback.SUCCESS : statusCallback.ERROR, record })
+      res.status(201).send({ status: record ? statusCallback.SUCCESS : statusCallback.ERROR, record })
     } else {
       res.send({ status: statusCallback.ERROR })
     }
@@ -36,7 +36,7 @@ export default {
     const projectId = req.params.proj_id
     const { file } = req.files
     const upload = await uploadFile(file[0])
-    res.send({ status: statusCallback.SUCCESS, upload })
+    res.status(201).send({ status: statusCallback.SUCCESS, video_url: upload })
   },
   delete: async (req, res) => {
     const uxerId = req.params.id
