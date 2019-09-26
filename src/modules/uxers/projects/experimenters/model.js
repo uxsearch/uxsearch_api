@@ -53,7 +53,7 @@ async function uploadFile(file) {
     }
     const fileBuffer = Buffer.from(file.buffer)
     
-    const blobStream = bucket.file(file.originalname).createWriteStream({
+    const blobStream = bucket.file('all_videos/' + file.originalname).createWriteStream({
       metadata: {
         contentType: metadata.contentType
       }
@@ -64,10 +64,13 @@ async function uploadFile(file) {
     })
 
     blobStream.on('finish', () => {
-      resolve()
+      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/all_videos%2F${file.originalname}?alt=media`
+      resolve(publicUrl)
     })
-
+    
     blobStream.end(fileBuffer)
+  }).then(result => {
+    return result
   })
 }
 
