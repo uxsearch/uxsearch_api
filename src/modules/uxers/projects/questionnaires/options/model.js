@@ -9,7 +9,7 @@ const collectionOption = 'options'
 async function getOptions(uxerId, projectId, questionId) {
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).doc(questionId).collection(collectionOption).get()
+    .collection(collectionQuestionnaire).doc(questionId).collection(collectionOption).orderBy('created_at').get()
   let options = []
   ref.forEach(snapshot => {
     options.push({
