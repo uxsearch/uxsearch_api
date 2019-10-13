@@ -1,4 +1,4 @@
-import { getQuestionnaire, getNote } from 'api/modules/uxers/projects/questionnaires/model'
+import { getQuestionnaire, getNote, createNote } from 'api/modules/uxers/projects/questionnaires/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -18,8 +18,18 @@ export default {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const notes = await getNote(uxerId, projectId)
-    console.log('cont', notes)
-    
     res.send(notes)
+  },
+  createNote: async (req, res) => {
+    const uxerId = req.params.id
+    const projectId = req.params.proj_id
+    const questions = req.body
+
+    if (_.isArray(questions)) {
+      const createQuestion = await createNote(uxerId, projectId, questions)
+      res.status(201).send({ status: createQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, createQuestion })
+    } else {
+      res.send({ status: statusCallback.ERROR })
+    }
   }
 }

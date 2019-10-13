@@ -27,6 +27,7 @@ router.delete('/:id/project/:proj_id/experimenter/:exper_id', experimentControll
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
+router.post('/:id/project/:proj_id/addnote', questionnaireController.createNote)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
 router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question/add', answerQuestionController.create)

@@ -1,9 +1,6 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
-import { getOptions } from './options/model'
-import { resolve } from 'dns';
-import { rejects } from 'assert';
-import { callbackify } from 'util';
+import { getOptions, createOption } from './options/model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -17,8 +14,7 @@ async function getQuestionnaire(uxerId, projectId) {
       .collection(collectionQuestionnaire).where('type_question', '==', 'questionnaire')
       .get()
     resolve(ref)
-  })
-  .then(result => {
+  }).then(result => {
     return new Promise((resolve, reject) => {
       let i = 0
       result.forEach(async (snapshot) => {
@@ -32,12 +28,11 @@ async function getQuestionnaire(uxerId, projectId) {
         })
         i++
 
-        if(i===result.size) {
+        if (i === result.size) {
           resolve(questionnaires)
         }
       })
-    })
-    .then(result => {
+    }).then(result => {
       return result
     })
   })
@@ -51,8 +46,7 @@ async function getNote(uxerId, projectId) {
       .collection(collectionQuestionnaire).where('type_question', '==', 'note')
       .get()
     resolve(ref)
-  })
-  .then(result => {
+  }).then(result => {
     return new Promise((resolve, reject) => {
       let i = 0
       result.forEach(async (snapshot) => {
@@ -66,15 +60,32 @@ async function getNote(uxerId, projectId) {
         })
         i++
 
-        if(i===result.size) {
+        if (i === result.size) {
           resolve(notes)
         }
       })
-    })
-    .then(result => {
+    }).then(result => {
       return result
     })
   })
 }
 
-export { getQuestionnaire, getNote }
+async function createNote(uxerId, projectId, questions) {
+  const created_at = new Date()
+  const updated_at = new Date()
+  const type_question = 'note'
+
+  for (var i = 0; i < questions.length; i++) {
+    const { question, type_form, option } = questions[i]
+    const ref = await db.collection(collectionUxer).doc(uxerId)
+      .collection(collectionProject).doc(projectId)
+      .collection(collectionQuestionnaire).add({ question, type_form, type_question, created_at, updated_at })
+
+    for (var j = 0; j < option.length; j++) {
+      await createOption(uxerId, projectId, ref.id, option[j])
+    }
+  }
+  return await getNote(uxerId, projectId)
+}
+
+export { getQuestionnaire, getNote, createNote }

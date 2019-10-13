@@ -20,13 +20,22 @@ async function getOptions(uxerId, projectId, questionId) {
   return options
 }
 
+async function createOption(uxerId, projectId, questionId, option) {
+  const created_at = new Date()
+  const updated_at = new Date()
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId)
+    .collection(collectionOption).add({ option, created_at, updated_at })
+}
+
 async function deleteOption(uxerId, projectId, questionId, optionId) {
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).collection(questionId)
     .collection(collectionOption).doc(optionId).delete()
-  if(ref === undefined) return 0
+  if (ref === undefined) return 0
   else return 1
 }
 
-export { getOptions, deleteOption }
+export { getOptions, deleteOption, createOption }
