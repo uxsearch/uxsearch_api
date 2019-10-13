@@ -64,7 +64,6 @@ async function getNote(uxerId, projectId) {
               options: await options,
             }
           })
-
           if (notes.length === numberOfNote) {
             resolve(notes)
           }
@@ -77,11 +76,11 @@ async function getNote(uxerId, projectId) {
 }
 
 async function createQuesitonnaire(uxerId, projectId, questions) {
-  const created_at = new Date()
-  const updated_at = new Date()
   const type_question = 'questionnaire'
-
+  
   for (var i = 0; i < questions.length; i++) {
+    const created_at = new Date()
+    const updated_at = new Date()
     const { question, type_form, option } = questions[i]
     const ref = await db.collection(collectionUxer).doc(uxerId)
       .collection(collectionProject).doc(projectId)
@@ -95,16 +94,16 @@ async function createQuesitonnaire(uxerId, projectId, questions) {
 }
 
 async function createNote(uxerId, projectId, questions) {
-  const created_at = new Date()
-  const updated_at = new Date()
   const type_question = 'note'
-
+  
   for (var i = 0; i < questions.length; i++) {
+    const created_at = new Date()
+    const updated_at = new Date()
     const { question, type_form, option } = questions[i]
     const ref = await db.collection(collectionUxer).doc(uxerId)
-      .collection(collectionProject).doc(projectId)
-      .collection(collectionQuestionnaire).add({ question, type_form, type_question, created_at, updated_at })
-
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).add({ question, type_form, type_question, created_at, updated_at })
+    
     for (var j = 0; j < option.length; j++) {
       await createOption(uxerId, projectId, ref.id, option[j])
     }
