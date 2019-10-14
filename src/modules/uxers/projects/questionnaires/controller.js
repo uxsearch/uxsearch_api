@@ -32,18 +32,6 @@ export default {
       res.send({ status: statusCallback.ERROR })
     }
   },
-  createNote: async (req, res) => {
-    const uxerId = req.params.id
-    const projectId = req.params.proj_id
-    const questions = req.body
-
-    if (_.isArray(questions)) {
-      const createQuestion = await createNote(uxerId, projectId, questions)
-      res.status(201).send({ status: createQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, createQuestion })
-    } else {
-      res.send({ status: statusCallback.ERROR })
-    }
-  },
   updateNote: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
@@ -51,7 +39,7 @@ export default {
 
     if (_.isArray(questions)) {
       const updateQuestion = await updateNote(uxerId, projectId, questions)
-      res.status(201).send({ status: updateQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, updateQuestion })
+      res.status(200).send({ status: updateQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, updateQuestion })
     } else {
       res.send({ status: statusCallback.ERROR })
     }

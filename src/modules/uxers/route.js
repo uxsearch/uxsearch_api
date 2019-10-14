@@ -30,14 +30,12 @@ router.post('/:id/project/:proj_id/addquestionnaire', questionnaireController.cr
 // router.put('/:id/project/:proj_id/updatequestionnaire', questionnaireController.updateQuestionnaire)
 
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
-// router.post('/:id/project/:proj_id/addnote', questionnaireController.createNote)
 router.put('/:id/project/:proj_id/updatenote', questionnaireController.updateNote)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
 router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question/add', answerQuestionController.create)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', answerNoteController.getOne)
-// router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-note/add', answerNoteController.create)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer/:ans_id/update', answerNoteController.update)
 
 export default router
