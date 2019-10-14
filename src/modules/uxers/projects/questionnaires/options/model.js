@@ -23,10 +23,20 @@ async function getOptions(uxerId, projectId, questionId) {
 async function createOption(uxerId, projectId, questionId, option) {
   const created_at = new Date()
   const updated_at = new Date()
-  const ref = await db.collection(collectionUxer).doc(uxerId)
+  await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).doc(questionId)
     .collection(collectionOption).add({ option, created_at, updated_at })
+}
+
+async function updateOption(uxerId, projectId, questionId, valueOption) {
+  const updated_at = new Date()
+  console.log(valueOption)
+  const { optionId, option } = valueOption
+  await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId)
+    .collection(collectionOption).doc(optionId).set({ option, updated_at }, { merge: true })
 }
 
 async function deleteOption(uxerId, projectId, questionId, optionId) {
@@ -38,4 +48,4 @@ async function deleteOption(uxerId, projectId, questionId, optionId) {
   else return 1
 }
 
-export { getOptions, deleteOption, createOption }
+export { getOptions, deleteOption, createOption, updateOption }

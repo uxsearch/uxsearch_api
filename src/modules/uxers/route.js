@@ -27,9 +27,10 @@ router.delete('/:id/project/:proj_id/experimenter/:exper_id', experimentControll
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.post('/:id/project/:proj_id/addquestionnaire', questionnaireController.createQuestionnaire)
+// router.put('/:id/project/:proj_id/updatequestionnaire', questionnaireController.updateQuestionnaire)
 
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
-router.post('/:id/project/:proj_id/addnote', questionnaireController.createNote)
+router.put('/:id/project/:proj_id/updatenote', questionnaireController.updateNote)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
 router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question/add', answerQuestionController.create)
