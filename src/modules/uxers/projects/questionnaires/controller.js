@@ -51,7 +51,7 @@ export default {
 
     if (_.isArray(questions)) {
       const updateQuestion = await updateNote(uxerId, projectId, questions)
-      res.status(201).send({ status: updateQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, updateNote })
+      res.status(201).send({ status: updateQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, updateQuestion })
     } else {
       res.send({ status: statusCallback.ERROR })
     }

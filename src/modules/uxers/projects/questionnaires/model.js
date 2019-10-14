@@ -1,6 +1,6 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
-import { getOptions, createOption, updateOption } from './options/model'
+import { getOptions, createOption, updateOption, deleteAllOptionOfQuestion } from './options/model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -75,6 +75,19 @@ async function getNote(uxerId, projectId) {
   })
 }
 
+async function getAllNoteId(uxerId, projectId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire)
+    .where('type_question', '==', 'note')
+    .get()
+  let noteId = []
+  ref.forEach(snapshot => {
+    noteId.push(snapshot.id)
+  })
+  return noteId
+}
+
 async function createQuesitonnaire(uxerId, projectId, questions) {
   const type_question = 'questionnaire'
 
@@ -94,7 +107,6 @@ async function createQuesitonnaire(uxerId, projectId, questions) {
 }
 
 async function createNote(uxerId, projectId, questions) {
-  console.log(questions)
   const created_at = new Date()
   const updated_at = new Date()
   const type_question = 'note'
@@ -110,21 +122,38 @@ async function createNote(uxerId, projectId, questions) {
 }
 
 async function updateNote(uxerId, projectId, questions) {
+  const allNoteId = await getAllNoteId(uxerId, projectId)
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
     if (questionId !== undefined) {
+      var index = allNoteId.indexOf(questionId)
+      if (index > -1) {
+        allNoteId.splice(index, 1)
+      }
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
         .set({ question, type_form, updated_at }, { merge: true })
       await updateOption(uxerId, projectId, questionId, options)
     } else if (questionId === undefined) {
-      console.log(question[i])
       await createNote(uxerId, projectId, questions[i])
     }
   }
+  if (allNoteId.length > 0) {
+    for (var j = 0; j < allNoteId.length; j++) {
+      await deleteAllOptionOfQuestion(uxerId, projectId, allNoteId[j])
+      await deleteNote(uxerId, projectId, allNoteId[j])
+    }
+  }
+
   return await getNote(uxerId, projectId)
+}
+
+async function deleteNote(uxerId, projectId, questionId) {
+  await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId).delete()
 }
 
 export { getQuestionnaire, getNote, createQuesitonnaire, createNote, updateNote }

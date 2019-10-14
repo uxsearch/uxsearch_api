@@ -25,11 +25,11 @@ async function getOptionId(uxerId, projectId, questionId) {
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).doc(questionId).collection(collectionOption).get()
-  let options = []
+  let optionId = []
   ref.forEach(snapshot => {
-    options.push(snapshot.id)
+    optionId.push(snapshot.id)
   })
-  return options
+  return optionId
 }
 
 async function createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at }) {
@@ -84,13 +84,20 @@ async function updateOption(uxerId, projectId, questionId, options) {
 }
 
 async function deleteOption(uxerId, projectId, questionId, optionId) {
-  console.log('Delete Option', uxerId, projectId, questionId, optionId)
-  const ref = await db.collection(collectionUxer).doc(uxerId)
+  await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).doc(questionId)
     .collection(collectionOption).doc(optionId).delete()
-  if (ref === undefined) return 0
-  else return 1
 }
 
-export { getOptions, deleteOption, createOption, updateOption }
+async function deleteAllOptionOfQuestion(uxerId, projectId, questionId) {
+  const allOptionId = await getOptionId(uxerId, projectId, questionId)
+  for(var i = 0; i < allOptionId.length; i++) {
+    await db.collection(collectionUxer).doc(uxerId)
+      .collection(collectionProject).doc(projectId)
+      .collection(collectionQuestionnaire).doc(questionId)
+      .collection(collectionOption).doc(allOptionId[i]).delete()
+  }
+}
+
+export { getOptions, deleteAllOptionOfQuestion, createOption, updateOption }
