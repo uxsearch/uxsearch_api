@@ -9,7 +9,7 @@ const collectionOption = 'options'
 async function getOptions(uxerId, projectId, questionId) {
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).doc(questionId).collection(collectionOption).orderBy('created_at').get()
+    .collection(collectionQuestionnaire).doc(questionId).collection(collectionOption).orderBy('updated_at').get()
   let options = []
   ref.forEach(snapshot => {
     options.push({
@@ -20,9 +20,10 @@ async function getOptions(uxerId, projectId, questionId) {
   return options
 }
 
-async function createOption(uxerId, projectId, questionId, option) {
+async function createOption(uxerId, projectId, questionId, valueOption) {
   const created_at = new Date()
   const updated_at = new Date()
+  const { option } = valueOption
   await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).doc(questionId)
@@ -33,10 +34,14 @@ async function updateOption(uxerId, projectId, questionId, valueOption) {
   const updated_at = new Date()
   console.log(valueOption)
   const { optionId, option } = valueOption
-  await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).doc(questionId)
-    .collection(collectionOption).doc(optionId).set({ option, updated_at }, { merge: true })
+  if(optionId !== undefined) {
+    await db.collection(collectionUxer).doc(uxerId)
+      .collection(collectionProject).doc(projectId)
+      .collection(collectionQuestionnaire).doc(questionId)
+      .collection(collectionOption).doc(optionId).set({ option, updated_at }, { merge: true })
+  } else if (optionId === undefined) {
+    createOption(uxerId, projectId, questionId, valueOption) 
+  }
 }
 
 async function deleteOption(uxerId, projectId, questionId, optionId) {
