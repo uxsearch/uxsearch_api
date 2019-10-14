@@ -21,6 +21,17 @@ async function getOptions(uxerId, projectId, questionId) {
   return options
 }
 
+async function getOptionId(uxerId, projectId, questionId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId).collection(collectionOption).get()
+  let options = []
+  ref.forEach(snapshot => {
+    options.push(snapshot.id)
+  })
+  return options
+}
+
 async function createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at }) {
   return await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
@@ -34,7 +45,7 @@ async function createOption(uxerId, projectId, questionId, options) {
       const created_at = new Date()
       const updated_at = new Date()
       const { option } = options[i]
-      
+
       await createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at })
     }
   } else {
@@ -47,10 +58,15 @@ async function createOption(uxerId, projectId, questionId, options) {
 }
 
 async function updateOption(uxerId, projectId, questionId, options) {
+  const allOptionId = await getOptionId(uxerId, projectId, questionId)
   for (var i = 0; i < options.length; i++) {
     const updated_at = new Date()
     const { optionId, option } = options[i]
     if (optionId !== undefined) {
+      var index = allOptionId.indexOf(optionId)
+      if (index > -1) {
+        allOptionId.splice(index, 1)
+      }
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
@@ -60,12 +76,18 @@ async function updateOption(uxerId, projectId, questionId, options) {
       await createOption(uxerId, projectId, questionId, options[i])
     }
   }
+  if (allOptionId.length > 0) {
+    for (var j = 0; j < allOptionId.length; j++) {
+      await deleteOption(uxerId, projectId, questionId, allOptionId[j])
+    }
+  }
 }
 
 async function deleteOption(uxerId, projectId, questionId, optionId) {
+  console.log('Delete Option', uxerId, projectId, questionId, optionId)
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).collection(questionId)
+    .collection(collectionQuestionnaire).doc(questionId)
     .collection(collectionOption).doc(optionId).delete()
   if (ref === undefined) return 0
   else return 1
