@@ -20,23 +20,10 @@ export default {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
-    const answerId = req.params.ans_id
-    const { question_key, answer } = req.body
-    if (_.isString(answer)) {
-      const answerNote = await updateAnswer(uxerId, projectId, experimenterId, answerId, { question_key, answer })
-      res.send({ status: answerNote ? statusCallback.SUCCESS : statusCallback.ERROR, answer: answerNote })
-    } else {
-      res.send({ status: statusCallback.ERROR })
-    }
-  },
-  create: async (req, res) => {
-    const uxerId = req.params.id
-    const projectId = req.params.proj_id
-    const experimenterId = req.params.exper_id
-    const { question_key, answer } = req.body
-    if (_.isString(question_key) && _.isString(answer)) {
-      const answerNote = await createAnswer(uxerId, projectId, experimenterId, { question_key, answer })
-      res.send({ status: answerNote ? statusCallback.SUCCESS : statusCallback.ERROR, answer: answerNote })
+    const answers = req.body
+    if (_.isArray(answers)) {
+      await updateAnswer(uxerId, projectId, experimenterId, answers)
+      res.status(200).send({ status: statusCallback.SUCCESS })
     } else {
       res.send({ status: statusCallback.ERROR })
     }
