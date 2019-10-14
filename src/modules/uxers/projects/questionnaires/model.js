@@ -1,80 +1,201 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
-import { getOptions } from './options/model'
-import { resolve } from 'dns';
-import { rejects } from 'assert';
-import { callbackify } from 'util';
+import { getOptions, createOption, updateOption, deleteAllOptionOfQuestion } from './options/model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
 const collectionQuestionnaire = 'questionnaires'
 
+async function getAllQuestionnaire(uxerId, projectId) {
+  return await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire)
+    .orderBy('updated_at', 'asc')
+    .get()
+}
+
 async function getQuestionnaire(uxerId, projectId) {
   let questionnaires = []
   return new Promise((resolve, reject) => {
-    const ref = db.collection(collectionUxer).doc(uxerId)
-      .collection(collectionProject).doc(projectId)
-      .collection(collectionQuestionnaire).where('type_question', '==', 'questionnaire')
-      .get()
+    const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
-  })
-  .then(result => {
+  }).then(result => {
     return new Promise((resolve, reject) => {
-      let i = 0
+      let numberOfQuestionnaire = 0
       result.forEach(async (snapshot) => {
-        const options = getOptions(uxerId, projectId, snapshot.id)
-        questionnaires.push({
-          id: snapshot.id,
-          data: {
-            question: snapshot.data(),
-            options: await options,
-          }
-        })
-        i++
+        if (snapshot.data().type_question === 'questionnaire') {
+          numberOfQuestionnaire++
+          const options = getOptions(uxerId, projectId, snapshot.id)
+          questionnaires.push({
+            id: snapshot.id,
+            data: {
+              question: snapshot.data(),
+              options: await options,
+            }
+          })
 
-        if(i===result.size) {
-          resolve(questionnaires)
+          if (questionnaires.length === numberOfQuestionnaire) {
+            resolve(questionnaires)
+          }
         }
       })
-    })
-    .then(result => {
+    }).then(result => {
       return result
     })
   })
+}
+
+async function getAllQuestionnaireId(uxerId, projectId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire)
+    .where('type_question', '==', 'questionnaire')
+    .get()
+  let questionnaireId = []
+  ref.forEach(snapshot => {
+    questionnaireId.push(snapshot.id)
+  })
+  return questionnaireId
 }
 
 async function getNote(uxerId, projectId) {
   let notes = []
   return new Promise((resolve, reject) => {
-    const ref = db.collection(collectionUxer).doc(uxerId)
-      .collection(collectionProject).doc(projectId)
-      .collection(collectionQuestionnaire).where('type_question', '==', 'note')
-      .get()
+    const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
-  })
-  .then(result => {
+  }).then(result => {
     return new Promise((resolve, reject) => {
-      let i = 0
+      let numberOfNote = 0
       result.forEach(async (snapshot) => {
-        const options = getOptions(uxerId, projectId, snapshot.id)
-        notes.push({
-          id: snapshot.id,
-          data: {
-            question: snapshot.data(),
-            options: await options,
+        if (snapshot.data().type_question === 'note') {
+          numberOfNote++
+          const options = getOptions(uxerId, projectId, snapshot.id)
+          notes.push({
+            id: snapshot.id,
+            data: {
+              question: snapshot.data(),
+              options: await options,
+            }
+          })
+          if (notes.length === numberOfNote) {
+            resolve(notes)
           }
-        })
-        i++
-
-        if(i===result.size) {
-          resolve(notes)
         }
       })
-    })
-    .then(result => {
+    }).then(result => {
       return result
     })
   })
 }
 
-export { getQuestionnaire, getNote }
+async function getAllNoteId(uxerId, projectId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire)
+    .where('type_question', '==', 'note')
+    .get()
+  let noteId = []
+  ref.forEach(snapshot => {
+    noteId.push(snapshot.id)
+  })
+  return noteId
+}
+
+async function createQuestion(uxerId, projectId, { question, type_form, type_question, created_at, updated_at }) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire)
+    .add({ question, type_form, type_question, created_at, updated_at })
+
+  return ref.id
+}
+
+async function createQuestionnaire(uxerId, projectId, questions) {
+  const created_at = new Date()
+  const updated_at = new Date()
+  const type_question = 'questionnaire'
+
+  const { question, type_form, options } = questions
+  const ref = await createQuestion(uxerId, projectId, { question, type_form, type_question, created_at, updated_at })
+  await createOption(uxerId, projectId, ref, options)
+
+  return await getQuestionnaire(uxerId, projectId)
+}
+
+async function createNote(uxerId, projectId, questions) {
+  const created_at = new Date()
+  const updated_at = new Date()
+  const type_question = 'note'
+
+  const { question, type_form, options } = questions
+  const ref = await createQuestion(uxerId, projectId, { question, type_form, type_question, created_at, updated_at })
+  await createOption(uxerId, projectId, ref, options)
+
+  return await getNote(uxerId, projectId)
+}
+
+async function updateNote(uxerId, projectId, questions) {
+  const allNoteId = await getAllNoteId(uxerId, projectId)
+  for (var i = 0; i < questions.length; i++) {
+    const updated_at = new Date()
+    const { questionId, question, type_form, options } = questions[i]
+    if (questionId !== undefined) {
+      var index = allNoteId.indexOf(questionId)
+      if (index > -1) {
+        allNoteId.splice(index, 1)
+      }
+      await db.collection(collectionUxer).doc(uxerId)
+        .collection(collectionProject).doc(projectId)
+        .collection(collectionQuestionnaire).doc(questionId)
+        .set({ question, type_form, updated_at }, { merge: true })
+      await updateOption(uxerId, projectId, questionId, options)
+    } else if (questionId === undefined) {
+      await createNote(uxerId, projectId, questions[i])
+    }
+  }
+  if (allNoteId.length > 0) {
+    for (var j = 0; j < allNoteId.length; j++) {
+      await deleteAllOptionOfQuestion(uxerId, projectId, allNoteId[j])
+      await deleteQuestion(uxerId, projectId, allNoteId[j])
+    }
+  }
+
+  return await getNote(uxerId, projectId)
+}
+
+async function updateQuestionnaire(uxerId, projectId, questions) {
+  const allQuestionnaireId = await getAllQuestionnaireId(uxerId, projectId)
+  for (var i = 0; i < questions.length; i++) {
+    const updated_at = new Date()
+    const { questionId, question, type_form, options } = questions[i]
+    if (questionId !== undefined) {
+      var index = allQuestionnaireId.indexOf(questionId)
+      if (index > -1) {
+        allQuestionnaireId.splice(index, 1)
+      }
+      await db.collection(collectionUxer).doc(uxerId)
+        .collection(collectionProject).doc(projectId)
+        .collection(collectionQuestionnaire).doc(questionId)
+        .set({ question, type_form, updated_at }, { merge: true })
+      await updateOption(uxerId, projectId, questionId, options)
+    } else if (questionId === undefined) {
+      await createQuestionnaire(uxerId, projectId, questions[i])
+    }
+  }
+  if (allQuestionnaireId.length > 0) {
+    for (var j = 0; j < allQuestionnaireId.length; j++) {
+      await deleteAllOptionOfQuestion(uxerId, projectId, allQuestionnaireId[j])
+      await deleteQuestion(uxerId, projectId, allQuestionnaireId[j])
+    }
+  }
+
+  return await getQuestionnaire(uxerId, projectId)
+}
+
+async function deleteQuestion(uxerId, projectId, questionId) {
+  await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId).delete()
+}
+
+export { getQuestionnaire, getNote, updateQuestionnaire, updateNote }
