@@ -81,13 +81,13 @@ async function createQuesitonnaire(uxerId, projectId, questions) {
   for (var i = 0; i < questions.length; i++) {
     const created_at = new Date()
     const updated_at = new Date()
-    const { question, type_form, option } = questions[i]
+    const { question, type_form, options } = questions[i]
     const ref = await db.collection(collectionUxer).doc(uxerId)
       .collection(collectionProject).doc(projectId)
       .collection(collectionQuestionnaire).add({ question, type_form, type_question, created_at, updated_at })
 
-    for (var j = 0; j < option.length; j++) {
-      await createOption(uxerId, projectId, ref.id, option[j])
+    for (var j = 0; j < options.length; j++) {
+      await createOption(uxerId, projectId, ref.id, options[j])
     }
   }
   return await getQuestionnaire(uxerId, projectId)
@@ -99,14 +99,12 @@ async function createNote(uxerId, projectId, questions) {
   for (var i = 0; i < questions.length; i++) {
     const created_at = new Date()
     const updated_at = new Date()
-    const { question, type_form, option } = questions[i]
+    const { question, type_form, options } = questions[i]
     const ref = await db.collection(collectionUxer).doc(uxerId)
       .collection(collectionProject).doc(projectId)
       .collection(collectionQuestionnaire)
       .add({ question, type_form, type_question, created_at, updated_at })
-    for (var j = 0; j < option.length; j++) {
-      await createOption(uxerId, projectId, ref.id, option[j])
-    }
+    await createOption(uxerId, projectId, ref.id, options)
   }
   return await getNote(uxerId, projectId)
 }
@@ -115,21 +113,18 @@ async function updateNote(uxerId, projectId, questions) {
   const newQuestion = []
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
-    const { questionId, question, type_form, option } = questions[i]
+    const { questionId, question, type_form, options } = questions[i]
     if (questionId !== undefined) {
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
         .set({ question, type_form, updated_at }, { merge: true })
-
-      for (var j = 0; j < option.length; j++) {
-        await updateOption(uxerId, projectId, questionId, option[j])
-      }
+      await updateOption(uxerId, projectId, questionId, options)
     } else if (questionId === undefined) {
       newQuestion.push(questions[i])
-      if (i === questions.length - 1) {
-        createNote(uxerId, projectId, newQuestion)
-      }
+    }
+    if (i === questions.length - 1) {
+      await createNote(uxerId, projectId, newQuestion)
     }
   }
   return await getNote(uxerId, projectId)

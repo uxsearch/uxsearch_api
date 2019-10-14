@@ -20,27 +20,35 @@ async function getOptions(uxerId, projectId, questionId) {
   return options
 }
 
-async function createOption(uxerId, projectId, questionId, valueOption) {
-  const created_at = new Date()
-  const updated_at = new Date()
-  const { option } = valueOption
-  await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId)
-    .collection(collectionQuestionnaire).doc(questionId)
-    .collection(collectionOption).add({ option, created_at, updated_at })
-}
-
-async function updateOption(uxerId, projectId, questionId, valueOption) {
-  const updated_at = new Date()
-  console.log(valueOption)
-  const { optionId, option } = valueOption
-  if(optionId !== undefined) {
+async function createOption(uxerId, projectId, questionId, options) {
+  for (var i = 0; i < options.length; i++) {
+    const created_at = new Date()
+    const updated_at = new Date()
+    const { option } = options[i]
     await db.collection(collectionUxer).doc(uxerId)
       .collection(collectionProject).doc(projectId)
       .collection(collectionQuestionnaire).doc(questionId)
-      .collection(collectionOption).doc(optionId).set({ option, updated_at }, { merge: true })
-  } else if (optionId === undefined) {
-    createOption(uxerId, projectId, questionId, valueOption) 
+      .collection(collectionOption).add({ option, created_at, updated_at })
+  }
+}
+
+async function updateOption(uxerId, projectId, questionId, options) {
+  const newOptions = []
+  for (var i = 0; i < options.length; i++) {
+    const updated_at = new Date()
+    const { optionId, option } = options[i]
+    if (optionId !== undefined) {
+      await db.collection(collectionUxer).doc(uxerId)
+        .collection(collectionProject).doc(projectId)
+        .collection(collectionQuestionnaire).doc(questionId)
+        .collection(collectionOption).doc(optionId)
+        .set({ option, updated_at }, { merge: true })
+    } else if (optionId === undefined) {
+      newOptions.push(options[i])
+    }
+    if (i === options.length - 1) {
+      await createOption(uxerId, projectId, questionId, newOptions)
+    }
   }
 }
 
