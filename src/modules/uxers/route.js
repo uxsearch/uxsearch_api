@@ -32,9 +32,9 @@ router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
 router.put('/:id/project/:proj_id/updatenote', questionnaireController.updateNote)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
-router.post('/:id/project/:proj_id/experimenter/:exper_id/answer-question/add', answerQuestionController.create)
+router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-question/update', answerQuestionController.update)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', answerNoteController.getOne)
-router.put('/:id/project/:proj_id/experimenter/:exper_id/answer/:ans_id/update', answerNoteController.update)
+router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-note/update', answerNoteController.update)
 
 export default router

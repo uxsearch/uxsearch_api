@@ -21,21 +21,15 @@ async function getAnswerQuestion(uxerId, projectId, experimenterId, questionId) 
   return answer
 }
 
-async function createAnswer(uxerId, projectId, experimenterId, { question_key, answer }) {
-  const created_at = new Date()
-  const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId)
-    .collection(collectionExperimenter).doc(experimenterId)
-    .collection(collectionAnswer).add({ question_key, answer, created_at })
-  const snapshot = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId)
-    .collection(collectionExperimenter).doc(experimenterId)
-    .collection(collectionAnswer).doc(ref.id).get()
-  let answerData = {
-    id: snapshot.id,
-    data: snapshot.data()
+async function updateAnswer(uxerId, projectId, experimenterId, answers) {
+  for (var i = 0; i < answers.length; i++) {
+    const { question_key, answer } = answers[i]
+    const created_at = new Date()
+    await db.collection(collectionUxer).doc(uxerId)
+      .collection(collectionProject).doc(projectId)
+      .collection(collectionExperimenter).doc(experimenterId)
+      .collection(collectionAnswer).add({ question_key, answer, created_at })
   }
-  return answerData
 }
 
-export { getAnswerQuestion, createAnswer }
+export { getAnswerQuestion, updateAnswer }
