@@ -94,23 +94,22 @@ async function createQuesitonnaire(uxerId, projectId, questions) {
 }
 
 async function createNote(uxerId, projectId, questions) {
+  console.log(questions)
+  const created_at = new Date()
+  const updated_at = new Date()
   const type_question = 'note'
 
-  for (var i = 0; i < questions.length; i++) {
-    const created_at = new Date()
-    const updated_at = new Date()
-    const { question, type_form, options } = questions[i]
-    const ref = await db.collection(collectionUxer).doc(uxerId)
-      .collection(collectionProject).doc(projectId)
-      .collection(collectionQuestionnaire)
-      .add({ question, type_form, type_question, created_at, updated_at })
-    await createOption(uxerId, projectId, ref.id, options)
-  }
+  const { question, type_form, options } = questions
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire)
+    .add({ question, type_form, type_question, created_at, updated_at })
+  await createOption(uxerId, projectId, ref.id, options)
+
   return await getNote(uxerId, projectId)
 }
 
 async function updateNote(uxerId, projectId, questions) {
-  const newQuestion = []
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
@@ -121,10 +120,8 @@ async function updateNote(uxerId, projectId, questions) {
         .set({ question, type_form, updated_at }, { merge: true })
       await updateOption(uxerId, projectId, questionId, options)
     } else if (questionId === undefined) {
-      newQuestion.push(questions[i])
-    }
-    if (i === questions.length - 1) {
-      await createNote(uxerId, projectId, newQuestion)
+      console.log(question[i])
+      await createNote(uxerId, projectId, questions[i])
     }
   }
   return await getNote(uxerId, projectId)

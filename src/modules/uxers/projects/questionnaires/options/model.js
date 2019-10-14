@@ -1,5 +1,6 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
+import _ from 'lodash'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -20,20 +21,32 @@ async function getOptions(uxerId, projectId, questionId) {
   return options
 }
 
+async function createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at }) {
+  return await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId)
+    .collection(collectionOption).add({ option, created_at, updated_at })
+}
+
 async function createOption(uxerId, projectId, questionId, options) {
-  for (var i = 0; i < options.length; i++) {
+  if (_.isArray(options)) {
+    for (var i = 0; i < options.length; i++) {
+      const created_at = new Date()
+      const updated_at = new Date()
+      const { option } = options[i]
+      
+      await createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at })
+    }
+  } else {
     const created_at = new Date()
     const updated_at = new Date()
-    const { option } = options[i]
-    await db.collection(collectionUxer).doc(uxerId)
-      .collection(collectionProject).doc(projectId)
-      .collection(collectionQuestionnaire).doc(questionId)
-      .collection(collectionOption).add({ option, created_at, updated_at })
+    const { option } = options
+
+    await createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at })
   }
 }
 
 async function updateOption(uxerId, projectId, questionId, options) {
-  const newOptions = []
   for (var i = 0; i < options.length; i++) {
     const updated_at = new Date()
     const { optionId, option } = options[i]
@@ -44,10 +57,7 @@ async function updateOption(uxerId, projectId, questionId, options) {
         .collection(collectionOption).doc(optionId)
         .set({ option, updated_at }, { merge: true })
     } else if (optionId === undefined) {
-      newOptions.push(options[i])
-    }
-    if (i === options.length - 1) {
-      await createOption(uxerId, projectId, questionId, newOptions)
+      await createOption(uxerId, projectId, questionId, options[i])
     }
   }
 }
