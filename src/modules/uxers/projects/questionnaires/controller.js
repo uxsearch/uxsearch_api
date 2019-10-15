@@ -35,7 +35,7 @@ export default {
   updateNote: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
-    const questions = req.body
+    const { questions } = req.body
 
     if (_.isArray(questions)) {
       const updateQuestion = await updateNote(uxerId, projectId, questions)
