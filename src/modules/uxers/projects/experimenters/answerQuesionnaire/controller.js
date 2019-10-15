@@ -20,10 +20,10 @@ export default {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
-    const answers = req.body
-    if(_.isArray(answers)) {
+    const { answers } = req.body
+    if (_.isArray(answers)) {
       await updateAnswer(uxerId, projectId, experimenterId, answers)
-      res.send({ status: statusCallback.SUCCESS})
+      res.send({ status: statusCallback.SUCCESS })
     } else {
       res.send({ status: statusCallback.ERROR })
     }

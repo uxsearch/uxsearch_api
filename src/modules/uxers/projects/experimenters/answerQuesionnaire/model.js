@@ -1,5 +1,6 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
+import { getExperimenterId } from '../model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -21,7 +22,8 @@ async function getAnswerQuestion(uxerId, projectId, experimenterId, questionId) 
   return answer
 }
 
-async function updateAnswer(uxerId, projectId, experimenterId, answers) {
+async function updateAnswer(uxerId, projectId, realExperId, answers) {
+  const experimenterId = await getExperimenterId(uxerId, projectId, realExperId)
   for (var i = 0; i < answers.length; i++) {
     const { question_key, answer } = answers[i]
     const created_at = new Date()
