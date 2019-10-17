@@ -135,15 +135,10 @@ async function createNote(uxerId, projectId, questions) {
 }
 
 async function updateNote(uxerId, projectId, questions) {
-  const allNoteId = await getAllNoteId(uxerId, projectId)
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
     if (questionId !== undefined) {
-      var index = allNoteId.indexOf(questionId)
-      if (index > -1) {
-        allNoteId.splice(index, 1)
-      }
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
@@ -153,26 +148,14 @@ async function updateNote(uxerId, projectId, questions) {
       await createNote(uxerId, projectId, questions[i])
     }
   }
-  if (allNoteId.length > 0) {
-    for (var j = 0; j < allNoteId.length; j++) {
-      await deleteAllOptionOfQuestion(uxerId, projectId, allNoteId[j])
-      await deleteQuestion(uxerId, projectId, allNoteId[j])
-    }
-  }
-
   return await getNote(uxerId, projectId)
 }
 
 async function updateQuestionnaire(uxerId, projectId, questions) {
-  const allQuestionnaireId = await getAllQuestionnaireId(uxerId, projectId)
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
     if (questionId !== undefined) {
-      var index = allQuestionnaireId.indexOf(questionId)
-      if (index > -1) {
-        allQuestionnaireId.splice(index, 1)
-      }
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
@@ -182,20 +165,16 @@ async function updateQuestionnaire(uxerId, projectId, questions) {
       await createQuestionnaire(uxerId, projectId, questions[i])
     }
   }
-  if (allQuestionnaireId.length > 0) {
-    for (var j = 0; j < allQuestionnaireId.length; j++) {
-      await deleteAllOptionOfQuestion(uxerId, projectId, allQuestionnaireId[j])
-      await deleteQuestion(uxerId, projectId, allQuestionnaireId[j])
-    }
-  }
-
   return await getQuestionnaire(uxerId, projectId)
 }
 
 async function deleteQuestion(uxerId, projectId, questionId) {
-  await db.collection(collectionUxer).doc(uxerId)
+  await deleteAllOptionOfQuestion(uxerId, projectId, questionId)
+  const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).doc(questionId).delete()
+  if (ref === undefined) return 0
+  else return 1
 }
 
-export { getQuestionnaire, getNote, updateQuestionnaire, updateNote }
+export { getQuestionnaire, getNote, updateQuestionnaire, updateNote, deleteQuestion }

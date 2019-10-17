@@ -43,5 +43,13 @@ export default {
     } else {
       res.send({ status: statusCallback.ERROR })
     }
+  },
+  delete: async (req, res) => {
+    const uxerId = req.params.id
+    const projectId = req.params.proj_id
+    const { questionId } = req.body
+
+    const haveQuestion = await deleteQuestion(uxerId, projectId, questionId)
+    res.send({ status: haveProject === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
   }
 }

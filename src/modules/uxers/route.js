@@ -3,6 +3,7 @@ import uxersController from 'api/modules/uxers/controller'
 import projectController from 'api/modules/uxers/projects/controller'
 import experimentController from 'api/modules/uxers/projects/experimenters/controller'
 import questionnaireController from 'api/modules/uxers/projects/questionnaires/controller'
+import optionController from 'api/modules/uxers/projects/questionnaires/options/controller'
 import answerQuestionController from 'api/modules/uxers/projects/experimenters/answerQuesionnaire/controller'
 import answerNoteController from 'api/modules/uxers/projects/experimenters/answerNote/controller'
 
@@ -27,13 +28,13 @@ router.delete('/:id/project/:proj_id/experimenter/:exper_id', experimentControll
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.put('/:id/project/:proj_id/updatequestionnaire', questionnaireController.updateQuestionnaire)
-
 router.get('/:id/project/:proj_id/test-note', questionnaireController.getNote)
 router.put('/:id/project/:proj_id/updatenote', questionnaireController.updateNote)
+router.delete('/:id/project/:proj_id/delete-question', questionnaireController.delete)
+router.delete('/:id/project/:proj_id/delete-option', optionController.delete)
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-question/update', answerQuestionController.update)
-
 router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', answerNoteController.getOne)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-note/update', answerNoteController.update)
 
