@@ -14,6 +14,13 @@ async function getAllQuestionnaire(uxerId, projectId) {
     .get()
 }
 
+async function getQuestionById(uxerId, projectId, questionId) {
+  return await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionQuestionnaire).doc(questionId)
+    .get()
+}
+
 async function getQuestionnaire(uxerId, projectId) {
   let questionnaires = []
   return new Promise((resolve, reject) => {
@@ -177,4 +184,4 @@ async function deleteQuestion(uxerId, projectId, questionId) {
   else return 1
 }
 
-export { getQuestionnaire, getNote, updateQuestionnaire, updateNote, deleteQuestion }
+export { getQuestionnaire, getNote, updateQuestionnaire, updateNote, deleteQuestion, getQuestionById }

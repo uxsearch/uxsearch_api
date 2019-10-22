@@ -33,7 +33,7 @@ router.put('/:id/project/:proj_id/updatenote', questionnaireController.updateNot
 router.delete('/:id/project/:proj_id/delete-question', questionnaireController.delete)
 router.delete('/:id/project/:proj_id/delete-option', optionController.delete)
 
-router.get('/:id/project/:proj_id/experimenter/:exper_id/questionnaire/:quest_id/answer', answerQuestionController.getOne)
+router.get('/:id/project/:proj_id/experimenter/:exper_id/answers-questionnaire', answerQuestionController.getAnswerQuestionnaire)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-question/update', answerQuestionController.update)
 router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', answerNoteController.getOne)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-note/update', answerNoteController.update)
