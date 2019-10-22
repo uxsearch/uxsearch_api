@@ -38,8 +38,8 @@ export default {
     }
   },
   delete: async (req, res) => {
-    const id = req.params.id
-    const haveUxers = await deleteUxer(id)
+    const { uxerId } = req.body
+    const haveUxers = await deleteUxer(uxerId)
     res.send({ status: haveUxers === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
   }
 }

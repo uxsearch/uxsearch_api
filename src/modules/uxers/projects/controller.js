@@ -34,8 +34,7 @@ export default {
     const uxerId = req.params.id
     const { name, cover_url, file_url } = req.body
     if (_.isString(name) && _.isString(cover_url) && _.isString(file_url)) {
-      const link_url = 'https://uxsearch.io/' + Math.random().toString(36).substring(7) + '/'
-      const projects = await createProject(uxerId, { name, cover_url, file_url, link_url })
+      const projects = await createProject(uxerId, { name, cover_url, file_url })
       res.status(201).send({ status: projects ? statusCallback.SUCCESS : statusCallback.ERROR, projects })
     } else {
       res.send({ status: statusCallback.ERROR })
@@ -43,7 +42,7 @@ export default {
   },
   delete: async (req, res) => {
     const uxerId = req.params.id
-    const projectId = req.params.proj_id
+    const { projectId } = req.body
     const haveProject = await deleteProject(uxerId, projectId)
     res.send({ status: haveProject === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
   }
