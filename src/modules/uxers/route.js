@@ -22,6 +22,7 @@ router.put('/:id/project/:proj_id/update', projectController.update)
 router.delete('/:id/project/delete', projectController.delete)
 
 router.get('/:id/project/:proj_id/experimenters', experimentController.getAll)
+router.get('/:id/project/:proj_id/experimenter/:exper_id', experimentController.getOne)
 router.post('/:id/project/:proj_id/record', experimentController.createRecord)
 router.post('/:id/project/:proj_id/upload', experimentController.uploadData)
 router.delete('/:id/project/:proj_id/experimenter/:exper_id', experimentController.delete)
