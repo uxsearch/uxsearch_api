@@ -25,9 +25,10 @@ async function getAnswerQuestion(uxerId, projectId, experimenterId) {
         answer.push({
           answer: {
             id: snapshot.id,
-            data: snapshot.data()
+            question: question.data().question,
+            answer: snapshot.data().answer,
+            created_at: snapshot.data().created_at
           },
-          question: question.data().question
         })
 
         if (numberOfAnswer === answer.length) {
