@@ -35,8 +35,8 @@ export default {
   updateNote: async (req, res) => {
     const uxerId = req.params.id
     const projectId = req.params.proj_id
-    const { questions } = req.body
-
+    const questions = req.body
+    
     if (_.isArray(questions)) {
       const updateQuestion = await updateNote(uxerId, projectId, questions)
       res.status(200).send({ status: updateQuestion ? statusCallback.SUCCESS : statusCallback.ERROR, updateQuestion })
