@@ -145,14 +145,14 @@ async function updateNote(uxerId, projectId, questions) {
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
-    if (questionId !== undefined) {
+    if (questionId === "") {
+      await createNote(uxerId, projectId, questions[i])
+    } else if (questionId !== undefined) {
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
         .set({ question, type_form, updated_at }, { merge: true })
       await updateOption(uxerId, projectId, questionId, options)
-    } else if (questionId === undefined) {
-      await createNote(uxerId, projectId, questions[i])
     }
   }
   return await getNote(uxerId, projectId)
@@ -162,14 +162,14 @@ async function updateQuestionnaire(uxerId, projectId, questions) {
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
-    if (questionId !== undefined) {
+    if (questionId === "") {
+      await createQuestionnaire(uxerId, projectId, questions[i])
+    } else if (questionId !== undefined) {
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
         .set({ question, type_form, updated_at }, { merge: true })
       await updateOption(uxerId, projectId, questionId, options)
-    } else if (questionId === undefined) {
-      await createQuestionnaire(uxerId, projectId, questions[i])
     }
   }
   return await getQuestionnaire(uxerId, projectId)
