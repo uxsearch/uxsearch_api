@@ -61,14 +61,14 @@ async function updateOption(uxerId, projectId, questionId, options) {
   for (var i = 0; i < options.length; i++) {
     const updated_at = new Date()
     const { optionId, option } = options[i]
-    if (optionId !== undefined) {
+    if (optionId === "") {
+      await createOption(uxerId, projectId, questionId, options[i])
+    } else if (optionId !== undefined) {
       await db.collection(collectionUxer).doc(uxerId)
         .collection(collectionProject).doc(projectId)
         .collection(collectionQuestionnaire).doc(questionId)
         .collection(collectionOption).doc(optionId)
         .set({ option, updated_at }, { merge: true })
-    } else if (optionId === undefined) {
-      await createOption(uxerId, projectId, questionId, options[i])
     }
   }
 }
