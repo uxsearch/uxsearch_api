@@ -121,11 +121,12 @@ async function createQuestionnaire(uxerId, projectId, questions) {
   const created_at = new Date()
   const updated_at = new Date()
   const type_question = 'questionnaire'
-
-  const { question, type_form, options } = questions
+  const { question, type_form } = questions
   const ref = await createQuestion(uxerId, projectId, { question, type_form, type_question, created_at, updated_at })
-  await createOption(uxerId, projectId, ref, options)
-
+  if (type_form === 'multiple' || type_form === 'checkbox') {
+    const { options } = questions
+    await createOption(uxerId, projectId, ref, options)
+  }
   return await getQuestionnaire(uxerId, projectId)
 }
 
@@ -133,11 +134,12 @@ async function createNote(uxerId, projectId, questions) {
   const created_at = new Date()
   const updated_at = new Date()
   const type_question = 'note'
-
-  const { question, type_form, options } = questions
+  const { question, type_form } = questions
   const ref = await createQuestion(uxerId, projectId, { question, type_form, type_question, created_at, updated_at })
-  await createOption(uxerId, projectId, ref, options)
-
+  if (type_form === 'multiple' || type_form === 'checkbox') {
+    const { options } = questions
+    await createOption(uxerId, projectId, ref, options)
+  }
   return await getNote(uxerId, projectId)
 }
 
@@ -145,7 +147,7 @@ async function updateNote(uxerId, projectId, questions) {
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
-    if (questionId === "") {
+    if (questionId === "" || questionId === undefined) {
       await createNote(uxerId, projectId, questions[i])
     } else if (questionId !== undefined) {
       await db.collection(collectionUxer).doc(uxerId)
@@ -162,7 +164,7 @@ async function updateQuestionnaire(uxerId, projectId, questions) {
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
-    if (questionId === "") {
+    if (questionId === "" || questionId === undefined) {
       await createQuestionnaire(uxerId, projectId, questions[i])
     } else if (questionId !== undefined) {
       await db.collection(collectionUxer).doc(uxerId)

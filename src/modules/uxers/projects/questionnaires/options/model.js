@@ -51,6 +51,7 @@ async function createOption(uxerId, projectId, questionId, options) {
   } else {
     const created_at = new Date()
     const updated_at = new Date()
+    console.log(options)
     const { option } = options
 
     await createOneOption(uxerId, projectId, questionId, { option, created_at, updated_at })
@@ -61,6 +62,7 @@ async function updateOption(uxerId, projectId, questionId, options) {
   for (var i = 0; i < options.length; i++) {
     const updated_at = new Date()
     const { optionId, option } = options[i]
+    console.log('option', options)
     if (optionId === "") {
       await createOption(uxerId, projectId, questionId, options[i])
     } else if (optionId !== undefined) {
