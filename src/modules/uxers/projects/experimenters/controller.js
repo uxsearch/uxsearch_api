@@ -1,4 +1,4 @@
-import { getExperimenterTest, createExperimentRecord, deleteExperimenter, uploadFile } from 'api/modules/uxers/projects/experimenters/model'
+import { getExperimenterTest, createExperimentRecord, deleteExperimenter, uploadFile, getExperimenterById } from 'api/modules/uxers/projects/experimenters/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -13,6 +13,14 @@ export default {
     const projectId = req.params.proj_id
     const experimenters = await getExperimenterTest(uxerId, projectId)
     res.send(experimenters)
+  },
+  getOne: async (req, res) => {
+    const uxerId = req.params.id
+    const projectId = req.params.proj_id
+    const experId = req.params.exper_id
+    console.log('Before Use Function')
+    const experimenter = await getExperimenterById(uxerId, projectId, experId)
+    res.send(experimenter)
   },
   createRecord: async (req, res) => {
     const uxerId = req.params.id

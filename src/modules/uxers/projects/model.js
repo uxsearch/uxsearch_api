@@ -40,9 +40,10 @@ async function updateProject(uxerId, projectId, { name, cover_url }) {
   return project
 }
 
-async function createProject(uxerId, { name, cover_url, file_url, link_url }) {
+async function createProject(uxerId, { name, cover_url, file_url }) {
   const created_at = new Date()
   const updated_at = new Date()
+  const link_url = 'https://uxsearch.cf/' + Math.random().toString(36).substring(7) + '/'
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).add({ name, cover_url, file_url, link_url, created_at, updated_at })
   const snapshot = await db.collection(collectionUxer).doc(uxerId)
