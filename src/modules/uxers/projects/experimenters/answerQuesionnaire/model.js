@@ -15,7 +15,7 @@ async function getAnswerQuestion(uxerId, projectId, realExperId) {
     const ref = db.collection(collectionUxer).doc(uxerId)
       .collection(collectionProject).doc(projectId)
       .collection(collectionExperimenter).doc(experimenterId)
-      .collection(collectionAnswer).get()
+      .collection(collectionAnswer).orderBy('created_at').get()
     resolve(ref)
   }).then(result => {
     return new Promise((resolve, reject) => {
