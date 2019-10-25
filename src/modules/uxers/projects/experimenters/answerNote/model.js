@@ -32,7 +32,8 @@ async function createAnswer(uxerId, projectId, experimenterId, valueAnswer) {
     .collection(collectionAnswer).add({ question_key, answer, created_at, updated_at })
 }
 
-async function updateAnswer(uxerId, projectId, experimenterId, answers) {
+async function updateAnswer(uxerId, projectId, realExperId, answers) {
+  const experimenterId = await getExperimenterId(uxerId, projectId, realExperId)
   for (var i = 0; i < answers.length; i++) {
     const updated_at = new Date()
     const { answerId, answer } = answers[i]
