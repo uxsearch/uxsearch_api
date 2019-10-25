@@ -1,5 +1,6 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
+import { getExperimenterId } from '../model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
