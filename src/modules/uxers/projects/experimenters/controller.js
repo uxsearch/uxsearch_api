@@ -9,16 +9,15 @@ const statusCallback = {
 
 export default {
   getAll: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const experimenters = await getExperimenterTest(uxerId, projectId)
     res.send(experimenters)
   },
   getOne: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const experId = req.params.exper_id
-    console.log('Before Use Function')
     const experimenter = await getExperimenterById(uxerId, projectId, experId)
     res.send(experimenter)
   },
@@ -40,14 +39,12 @@ export default {
     }
   },
   uploadData: async (req, res) => {
-    const uxerId = req.params.id
-    const projectId = req.params.proj_id
     const { file } = req.files
     const upload = await uploadFile(file[0])
     res.status(201).send({ status: statusCallback.SUCCESS, video_url: upload })
   },
   delete: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const experId = req.params.exper_id
     const haveExperiment = await deleteExperimenter(uxerId, projectId, experId)

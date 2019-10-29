@@ -9,7 +9,7 @@ const statusCallback = {
 
 export default {
   getOne: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
     const noteId = req.params.note_id
@@ -17,7 +17,7 @@ export default {
     res.send(answer)
   },
   update: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
     const { answers } = req.body

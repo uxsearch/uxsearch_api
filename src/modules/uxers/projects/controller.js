@@ -9,7 +9,7 @@ const statusCallback = {
 
 export default {
   getProjectByUxerId: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projects = await getProjectByUxerId(uxerId)
     res.send(projects)
   },
@@ -20,7 +20,7 @@ export default {
     res.send(projects)
   },
   update: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const { name, cover_url } = req.body
     if (_.isString(name) && _.isString(cover_url)) {
@@ -31,7 +31,7 @@ export default {
     }
   },
   create: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const { name, cover_url, file_url } = req.body
     if (_.isString(name) && _.isString(cover_url) && _.isString(file_url)) {
       const projects = await createProject(uxerId, { name, cover_url, file_url })
@@ -41,7 +41,7 @@ export default {
     }
   },
   delete: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const { projectId } = req.body
     const haveProject = await deleteProject(uxerId, projectId)
     res.send({ status: haveProject === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
