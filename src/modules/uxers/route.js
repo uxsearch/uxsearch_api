@@ -17,6 +17,7 @@ router.put('/:id/update', requireAuth, uxersController.update)
 router.delete('/delete', requireAuth, uxersController.delete)
 
 router.get('/:id/projects', requireAuth, projectController.getProjectByUxerId)
+router.get('/:id/:url', projectController.getOneByPath)
 router.get('/:id/project/:proj_id', projectController.getOne)
 router.post('/:id/project/add', requireAuth, projectController.create)
 router.put('/:id/project/:proj_id/update', requireAuth, projectController.update)

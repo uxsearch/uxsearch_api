@@ -27,6 +27,17 @@ async function getOneProject(uxerId, projectId) {
   return project
 }
 
+async function getProjectByPath({ uxerId, generate_url }) {
+  generate_url = 'https://uxsearch.cf/' + generate_url
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).where('link_url', '==', generate_url).get()
+  let project = {
+    id: ref.id,
+    data: ref.data()
+  }
+  return project
+}
+
 async function updateProject(uxerId, projectId, { name, cover_url }) {
   const updated_at = new Date()
   const ref = await db.collection(collectionUxer).doc(uxerId)
@@ -62,4 +73,4 @@ async function deleteProject(uxerId, projectId) {
   else return 1
 }
 
-export { getProjectByUxerId, getOneProject, createProject, updateProject, deleteProject }
+export { getProjectByUxerId, getOneProject, getProjectByPath, createProject, updateProject, deleteProject }
