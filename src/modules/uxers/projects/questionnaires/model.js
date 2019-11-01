@@ -144,6 +144,7 @@ async function createNote(uxerId, projectId, questions) {
 }
 
 async function updateNote(uxerId, projectId, questions) {
+  console.log('questions', questions)
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
