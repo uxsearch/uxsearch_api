@@ -10,7 +10,7 @@ async function getAllQuestionnaire(uxerId, projectId) {
   return await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire)
-    .orderBy('updated_at', 'asc')
+    .orderBy('updated_at')
     .get()
 }
 

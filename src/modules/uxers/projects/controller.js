@@ -1,4 +1,4 @@
-import { getProjectByUxerId, getOneProject, getProjectByPath, createProject, updateProject, deleteProject } from 'api/modules/uxers/projects/model'
+import { getProjectByUxerId, getOneProject, getProjectByPath, createProject, uploadCoverImage, updateProject, deleteProject } from 'api/modules/uxers/projects/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -28,19 +28,24 @@ export default {
   update: async (req, res) => {
     const uxerId = req.user.uid
     const projectId = req.params.proj_id
-    const { name, cover_url } = req.body
+    const { name, cover_url, description } = req.body
     if (_.isString(name) && _.isString(cover_url)) {
-      const projects = await updateProject(uxerId, projectId, { name, cover_url })
+      const projects = await updateProject(uxerId, projectId, { name, cover_url, description })
       res.send({ status: projects ? statusCallback.SUCCESS : statusCallback.ERROR, projects })
     } else {
       res.send({ status: statusCallback.ERROR })
     }
   },
+  upload: async (req, res) => {
+    const { file } = req.files
+    const upload = await uploadCoverImage(file[0])
+    res.status(201).send({ status: statusCallback.SUCCESS, cover_url: upload })
+  },
   create: async (req, res) => {
     const uxerId = req.user.uid
-    const { name, cover_url, file_url } = req.body
+    const { name, cover_url, description, file_url } = req.body
     if (_.isString(name) && _.isString(cover_url) && _.isString(file_url)) {
-      const projects = await createProject(uxerId, { name, cover_url, file_url })
+      const projects = await createProject(uxerId, { name, cover_url, description, file_url })
       res.status(201).send({ status: projects ? statusCallback.SUCCESS : statusCallback.ERROR, projects })
     } else {
       res.send({ status: statusCallback.ERROR })
