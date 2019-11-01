@@ -43,10 +43,10 @@ async function getProjectByPath(uxerId, generate_url) {
   return project
 }
 
-async function updateProject(uxerId, projectId, { name, cover_url }) {
+async function updateProject(uxerId, projectId, { name, cover_url, description }) {
   const updated_at = new Date()
   const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId).set({ name, cover_url, updated_at }, { merge: true })
+    .collection(collectionProject).doc(projectId).set({ name, cover_url, description, updated_at }, { merge: true })
   const snapshot = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId).get()
   let project = {
