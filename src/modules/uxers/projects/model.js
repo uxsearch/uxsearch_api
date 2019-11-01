@@ -27,14 +27,19 @@ async function getOneProject(uxerId, projectId) {
   return project
 }
 
-async function getProjectByPath({ uxerId, generate_url }) {
-  generate_url = 'https://uxsearch.cf/' + generate_url
+async function getProjectByPath(uxerId, generate_url) {
+  generate_url = 'https://uxsearch.cf/' + generate_url + '/'
   const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).where('link_url', '==', generate_url).get()
-  let project = {
-    id: ref.id,
-    data: ref.data()
-  }
+    .collection(collectionProject)
+    .where('link_url', '==', generate_url)
+    .get()
+  let project = undefined
+  ref.forEach(snapshot => {
+    project = {
+      id: snapshot.id,
+      data: snapshot.data()
+    }
+  })
   return project
 }
 
