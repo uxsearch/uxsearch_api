@@ -71,27 +71,31 @@ async function getNote(uxerId, projectId) {
     const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
   }).then(result => {
-    return new Promise((resolve, reject) => {
-      let numberOfNote = 0
-      result.forEach(async (snapshot) => {
-        if (snapshot.data().type_question === 'note') {
-          numberOfNote++
-          const options = getOptions(uxerId, projectId, snapshot.id)
-          notes.push({
-            id: snapshot.id,
-            data: {
-              question: snapshot.data(),
-              options: await options,
+    if(result.docs.length !== 0 ) {
+      return new Promise((resolve, reject) => {
+        let numberOfNote = 0
+        result.forEach(async (snapshot) => {
+          if (snapshot.data().type_question === 'note') {
+            numberOfNote++
+            const options = getOptions(uxerId, projectId, snapshot.id)
+            notes.push({
+              id: snapshot.id,
+              data: {
+                question: snapshot.data(),
+                options: await options,
+              }
+            })
+            if (notes.length === numberOfNote) {
+              resolve(notes)
             }
-          })
-          if (notes.length === numberOfNote) {
-            resolve(notes)
           }
-        }
+        })
+      }).then(result => {
+        return result
       })
-    }).then(result => {
-      return result
-    })
+    } else {
+      return notes
+    }
   })
 }
 
@@ -144,7 +148,6 @@ async function createNote(uxerId, projectId, questions) {
 }
 
 async function updateNote(uxerId, projectId, questions) {
-  console.log('questions', questions)
   for (var i = 0; i < questions.length; i++) {
     const updated_at = new Date()
     const { questionId, question, type_form, options } = questions[i]
