@@ -78,7 +78,7 @@ async function uploadCoverImage(file) {
     })
 
     blobStream.on('finish', () => {
-      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/all_videos%2F${file.originalname}?alt=media`
+      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/cover_img%2F${file.originalname}?alt=media`
       resolve(publicUrl)
     })
 
