@@ -51,7 +51,7 @@ async function getQuestionnaire(uxerId, projectId) {
         return result
       })
     } else {
-      return notes
+      return questionnaires
     }
   })
 }
