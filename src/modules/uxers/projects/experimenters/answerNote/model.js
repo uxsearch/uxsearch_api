@@ -2,7 +2,6 @@ import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
 import { getExperimenterId } from '../model'
 import { getQuestionById } from '../../questionnaires/model'
-import { getOptions } from '../../questionnaires/options/model'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -16,7 +15,7 @@ async function getAnswerNote(uxerId, projectId, realExperId) {
     const ref = db.collection(collectionUxer).doc(uxerId)
       .collection(collectionProject).doc(projectId)
       .collection(collectionExperimenter).doc(experimenterId)
-      .collection(collectionAnswer).orderBy('created_at').get()
+      .collection(collectionAnswer).orderBy('updated_at').get()
     resolve(ref)
   }).then(result => {
     return new Promise((resolve, reject) => {
@@ -29,7 +28,8 @@ async function getAnswerNote(uxerId, projectId, realExperId) {
             id: snapshot.id,
             question: question.data().question,
             answer: snapshot.data().answer,
-            created_at: snapshot.data().created_at
+            created_at: snapshot.data().created_at,
+            updated_at: snapshot.data().updated_at,
           }
         })
 
