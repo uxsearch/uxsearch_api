@@ -13,6 +13,7 @@ const router = express.Router()
 
 // router.get('/:id', requireAuth, uxersController.getUxerById)
 // router.post('/add', requireAuth, uxersController.create)
+router.post('/:id/upload', requireAuth, uxersController.upload)
 router.put('/:id/update', requireAuth, uxersController.update)
 router.delete('/delete', requireAuth, uxersController.delete)
 

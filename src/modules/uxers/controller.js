@@ -1,4 +1,4 @@
-import { getAll, getUxerById, createUxer, updateUxer, deleteUxer } from 'api/modules/uxers/model'
+import { getAll, getUxerById, createUxer, updateUxer, uploadProfileImg, deleteUxer } from 'api/modules/uxers/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -27,6 +27,11 @@ export default {
     } else {
       res.send({ status: statusCallback.ERROR })
     }
+  },
+  upload: async (req, res) => {
+    const { file } = req.files
+    const upload = await uploadProfileImg(file[0])
+    res.status(201).send({ status: statusCallback.SUCCESS, img_url: upload })
   },
   create: async (req, res) => {
     const { name, company } = req.body
