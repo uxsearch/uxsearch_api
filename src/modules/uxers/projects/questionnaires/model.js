@@ -10,7 +10,7 @@ async function getAllQuestionnaire(uxerId, projectId) {
   return await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire)
-    .orderBy('updated_at', 'asc')
+    .orderBy('updated_at')
     .get()
 }
 
@@ -27,28 +27,37 @@ async function getQuestionnaire(uxerId, projectId) {
     const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
   }).then(result => {
-    return new Promise((resolve, reject) => {
-      let numberOfQuestionnaire = 0
-      result.forEach(async (snapshot) => {
-        if (snapshot.data().type_question === 'questionnaire') {
-          numberOfQuestionnaire++
-          const options = getOptions(uxerId, projectId, snapshot.id)
-          questionnaires.push({
-            id: snapshot.id,
-            data: {
-              question: snapshot.data(),
-              options: await options,
-            }
-          })
+    if (result.docs.length !== 0) {
+      return new Promise((resolve, reject) => {
+        let numberOfQuestionnaire = 0
+        let numberOfQuestion = 0
+        result.forEach(async (snapshot) => {
+          if (snapshot.data().type_question === 'questionnaire') {
+            numberOfQuestionnaire++
+            const options = getOptions(uxerId, projectId, snapshot.id)
+            questionnaires.push({
+              id: snapshot.id,
+              data: {
+                question: snapshot.data(),
+                options: await options,
+              }
+            })
 
-          if (questionnaires.length === numberOfQuestionnaire) {
-            resolve(questionnaires)
+            if (questionnaires.length === numberOfQuestionnaire) {
+              resolve(questionnaires)
+            }
           }
-        }
+          numberOfQuestion++
+          if(numberOfQuestion === result.docs.length) {
+            if(questionnaires.length === 0) resolve(questionnaires)
+          }
+        })
+      }).then(result => {
+        return result
       })
-    }).then(result => {
-      return result
-    })
+    } else {
+      return questionnaires
+    }
   })
 }
 
@@ -71,27 +80,36 @@ async function getNote(uxerId, projectId) {
     const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
   }).then(result => {
-    return new Promise((resolve, reject) => {
-      let numberOfNote = 0
-      result.forEach(async (snapshot) => {
-        if (snapshot.data().type_question === 'note') {
-          numberOfNote++
-          const options = getOptions(uxerId, projectId, snapshot.id)
-          notes.push({
-            id: snapshot.id,
-            data: {
-              question: snapshot.data(),
-              options: await options,
+    if (result.docs.length !== 0) {
+      return new Promise((resolve, reject) => {
+        let numberOfNote = 0
+        let numberOfQuestion = 0
+        result.forEach(async (snapshot) => {
+          if (snapshot.data().type_question === 'note') {
+            numberOfNote++
+            const options = getOptions(uxerId, projectId, snapshot.id)
+            notes.push({
+              id: snapshot.id,
+              data: {
+                question: snapshot.data(),
+                options: await options,
+              }
+            })
+            if (notes.length === numberOfNote) {
+              resolve(notes)
             }
-          })
-          if (notes.length === numberOfNote) {
-            resolve(notes)
           }
-        }
+          numberOfQuestion++
+          if(numberOfQuestion === result.docs.length) {
+            if(notes.length === 0) resolve(notes)
+          }
+        })
+      }).then(result => {
+        return result
       })
-    }).then(result => {
-      return result
-    })
+    } else {
+      return notes
+    }
   })
 }
 

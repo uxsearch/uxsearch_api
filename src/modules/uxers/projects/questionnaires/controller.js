@@ -15,13 +15,13 @@ export default {
     res.send(questionnaires)
   },
   getNote: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const notes = await getNote(uxerId, projectId)
     res.send(notes)
   },
   updateQuestionnaire: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const questions = req.body
 
@@ -33,7 +33,7 @@ export default {
     }
   },
   updateNote: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const questions = req.body
     
@@ -45,7 +45,7 @@ export default {
     }
   },
   delete: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const { questionId } = req.body
 

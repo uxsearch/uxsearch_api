@@ -7,7 +7,7 @@ import router from 'api/routers'
 
 const port = parseInt(process.env.PORT, 10) || 3000
 
-var app = express();
+var app = express()
 app.use(cors())
 
 app.get('/', (req, res) => {
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 var upload = multer()
 app.use(bodyParser.json())
 
-app.use('/api',upload.fields([{ name: 'file'}]), router)
+app.use('/api', upload.fields([{ name: 'file' }]), router)
 
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 

@@ -1,5 +1,5 @@
 import firebase from 'api/firebase-config'
-import { db } from 'api/firebasehelper'
+import { db, bucket } from 'api/firebasehelper'
 
 const collectionUxer = 'uxers'
 const collectionProject = 'projects'
@@ -27,10 +27,26 @@ async function getOneProject(uxerId, projectId) {
   return project
 }
 
-async function updateProject(uxerId, projectId, { name, cover_url }) {
+async function getProjectByPath(uxerId, generate_url) {
+  generate_url = 'https://uxsearch.cf/' + generate_url + '/'
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject)
+    .where('link_url', '==', generate_url)
+    .get()
+  let project = undefined
+  ref.forEach(snapshot => {
+    project = {
+      id: snapshot.id,
+      data: snapshot.data()
+    }
+  })
+  return project
+}
+
+async function updateProject(uxerId, projectId, { name, cover_url, description }) {
   const updated_at = new Date()
   const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).doc(projectId).set({ name, cover_url, updated_at }, { merge: true })
+    .collection(collectionProject).doc(projectId).set({ name, cover_url, description, updated_at }, { merge: true })
   const snapshot = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId).get()
   let project = {
@@ -40,12 +56,45 @@ async function updateProject(uxerId, projectId, { name, cover_url }) {
   return project
 }
 
-async function createProject(uxerId, { name, cover_url, file_url }) {
+async function uploadCoverImage(file) {
+  const metadata = {
+    contentType: 'image/jpg'
+  }
+
+  return new Promise((resolve, rejects) => {
+    if (file.buffer instanceof Buffer === false) {
+      throw new Error('Invalide Object Buffer')
+    }
+    const fileBuffer = Buffer.from(file.buffer)
+
+    const blobStream = bucket.file('cover_img/' + file.originalname).createWriteStream({
+      metadata: {
+        contentType: metadata.contentType
+      }
+    })
+
+    blobStream.on('error', (err) => {
+      throw new Error(err)
+    })
+
+    blobStream.on('finish', () => {
+      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/cover_img%2F${file.originalname}?alt=media`
+      resolve(publicUrl)
+    })
+
+    blobStream.end(fileBuffer)
+  }).then(result => {
+    return result
+  })
+}
+
+
+async function createProject(uxerId, { name, description, cover_url, file_url }) {
   const created_at = new Date()
   const updated_at = new Date()
   const link_url = 'https://uxsearch.cf/' + Math.random().toString(36).substring(7) + '/'
   const ref = await db.collection(collectionUxer).doc(uxerId)
-    .collection(collectionProject).add({ name, cover_url, file_url, link_url, created_at, updated_at })
+    .collection(collectionProject).add({ name, cover_url, description, file_url, link_url, created_at, updated_at })
   const snapshot = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(ref.id).get()
   let project = {
@@ -62,4 +111,4 @@ async function deleteProject(uxerId, projectId) {
   else return 1
 }
 
-export { getProjectByUxerId, getOneProject, createProject, updateProject, deleteProject }
+export { getProjectByUxerId, getOneProject, getProjectByPath, createProject, uploadCoverImage, updateProject, deleteProject }

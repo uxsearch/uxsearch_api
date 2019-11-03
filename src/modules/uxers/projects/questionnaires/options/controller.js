@@ -9,12 +9,12 @@ const statusCallback = {
 
 export default {
   delete: async (req, res) => {
-    const uxerId = req.params.id
+    const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const questionId = req.params.questionId
     const { optionId } = req.body
 
     const haveOption = await deleteOption(uxerId, projectId, questionId, optionId)
-    res.send({ status: haveProject === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
+    res.send({ status: haveOption === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
   }
 }
