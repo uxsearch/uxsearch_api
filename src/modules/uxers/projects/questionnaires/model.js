@@ -27,28 +27,32 @@ async function getQuestionnaire(uxerId, projectId) {
     const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
   }).then(result => {
-    return new Promise((resolve, reject) => {
-      let numberOfQuestionnaire = 0
-      result.forEach(async (snapshot) => {
-        if (snapshot.data().type_question === 'questionnaire') {
-          numberOfQuestionnaire++
-          const options = getOptions(uxerId, projectId, snapshot.id)
-          questionnaires.push({
-            id: snapshot.id,
-            data: {
-              question: snapshot.data(),
-              options: await options,
-            }
-          })
+    if (result.docs.length !== 0) {
+      return new Promise((resolve, reject) => {
+        let numberOfQuestionnaire = 0
+        result.forEach(async (snapshot) => {
+          if (snapshot.data().type_question === 'questionnaire') {
+            numberOfQuestionnaire++
+            const options = getOptions(uxerId, projectId, snapshot.id)
+            questionnaires.push({
+              id: snapshot.id,
+              data: {
+                question: snapshot.data(),
+                options: await options,
+              }
+            })
 
-          if (questionnaires.length === numberOfQuestionnaire) {
-            resolve(questionnaires)
+            if (questionnaires.length === numberOfQuestionnaire) {
+              resolve(questionnaires)
+            }
           }
-        }
+        })
+      }).then(result => {
+        return result
       })
-    }).then(result => {
-      return result
-    })
+    } else {
+      return notes
+    }
   })
 }
 
@@ -71,7 +75,7 @@ async function getNote(uxerId, projectId) {
     const ref = getAllQuestionnaire(uxerId, projectId)
     resolve(ref)
   }).then(result => {
-    if(result.docs.length !== 0 ) {
+    if (result.docs.length !== 0) {
       return new Promise((resolve, reject) => {
         let numberOfNote = 0
         result.forEach(async (snapshot) => {
