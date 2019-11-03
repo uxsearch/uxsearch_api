@@ -30,6 +30,7 @@ async function getQuestionnaire(uxerId, projectId) {
     if (result.docs.length !== 0) {
       return new Promise((resolve, reject) => {
         let numberOfQuestionnaire = 0
+        let numberOfQuestion = 0
         result.forEach(async (snapshot) => {
           if (snapshot.data().type_question === 'questionnaire') {
             numberOfQuestionnaire++
@@ -45,6 +46,10 @@ async function getQuestionnaire(uxerId, projectId) {
             if (questionnaires.length === numberOfQuestionnaire) {
               resolve(questionnaires)
             }
+          }
+          numberOfQuestion++
+          if(numberOfQuestion === result.docs.length) {
+            if(questionnaires.length === 0) resolve(questionnaires)
           }
         })
       }).then(result => {
@@ -78,6 +83,7 @@ async function getNote(uxerId, projectId) {
     if (result.docs.length !== 0) {
       return new Promise((resolve, reject) => {
         let numberOfNote = 0
+        let numberOfQuestion = 0
         result.forEach(async (snapshot) => {
           if (snapshot.data().type_question === 'note') {
             numberOfNote++
@@ -92,6 +98,10 @@ async function getNote(uxerId, projectId) {
             if (notes.length === numberOfNote) {
               resolve(notes)
             }
+          }
+          numberOfQuestion++
+          if(numberOfQuestion === result.docs.length) {
+            if(notes.length === 0) resolve(notes)
           }
         })
       }).then(result => {
