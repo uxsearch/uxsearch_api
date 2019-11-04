@@ -1,4 +1,5 @@
 import { getAll, getUxerById, createUxer, updateUxer, uploadProfileImg, deleteUxer } from 'api/modules/uxers/model'
+import { createToken } from 'api/util/jwt'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -14,15 +15,27 @@ export default {
     res.send(uxers)
   },
   getUxerById: async (req, res) => {
-    const id = req.params.id
+    const id = req.user.uid
     const uxers = await getUxerById(id)
     res.send(uxers)
   },
   update: async (req, res) => {
     const id = req.params.id
     const { firstname, lastname, company, email, img_url } = req.body
-    if (_.isString(name) && _.isString(company)) {
-      const uxers = await updateUxer(id, { firstname, lastname, company, email, img_url })
+    if (_.isString(firstname) &&
+    _.isString(lastname) &&
+    _.isString(company) &&
+    _.isString(email) &&
+    _.isString(img_url)) {
+      let uxers = await updateUxer(id, { firstname, lastname, company, email, img_url })
+      const token = createToken(uxers, process.env.SECRET_KEY)
+      res.setHeader('x-token', token)
+      uxers = {
+        uid: id,
+        data: uxers,
+        token: token
+      }
+      console.log(uxers)
       res.send({ status: uxers ? statusCallback.SUCCESS : statusCallback.ERROR, uxers })
     } else {
       res.send({ status: statusCallback.ERROR })
