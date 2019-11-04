@@ -20,9 +20,9 @@ export default {
   },
   update: async (req, res) => {
     const id = req.params.id
-    const { name, company } = req.body
+    const { firstname, lastname, company, email, img_url } = req.body
     if (_.isString(name) && _.isString(company)) {
-      const uxers = await updateUxer(id, { name, company })
+      const uxers = await updateUxer(id, { firstname, lastname, company, email, img_url })
       res.send({ status: uxers ? statusCallback.SUCCESS : statusCallback.ERROR, uxers })
     } else {
       res.send({ status: statusCallback.ERROR })

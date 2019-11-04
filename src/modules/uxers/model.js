@@ -35,9 +35,9 @@ async function createUxer({ name, company }) {
   return uxer
 }
 
-async function updateUxer(uxerId, { name, company }) {
+async function updateUxer(uxerId, { firstname, lastname, company, email, img_url }) {
   const updated_at = new Date()
-  const ref = await db.collection(collectionUxer).doc(uxerId).set({ name, company, updated_at }, { merge: true })
+  const ref = await db.collection(collectionUxer).doc(uxerId).set({ firstname, lastname, company, email, img_url, updated_at }, { merge: true })
   const snapshot = await db.collection(collectionUxer).doc(uxerId).get()
   let uxer = {
     id: snapshot.id,
