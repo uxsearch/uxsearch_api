@@ -1,4 +1,4 @@
-import { getQuestionnaire, getNote, updateQuestionnaire, updateNote } from 'api/modules/uxers/projects/questionnaires/model'
+import { getQuestionnaire, getNote, updateQuestionnaire, updateNote, deleteQuestion } from 'api/modules/uxers/projects/questionnaires/model'
 import _ from 'lodash'
 
 const statusCallback = {
@@ -48,8 +48,7 @@ export default {
     const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const { questionId } = req.body
-
     const haveQuestion = await deleteQuestion(uxerId, projectId, questionId)
-    res.send({ status: haveProject === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
+    res.send({ status: haveQuestion === 0 ? statusCallback.SUCCESS : statusCallback.ERROR })
   }
 }
