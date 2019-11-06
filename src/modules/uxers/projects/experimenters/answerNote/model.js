@@ -20,23 +20,27 @@ async function getAnswerNote(uxerId, projectId, realExperId) {
   }).then(result => {
     return new Promise((resolve, reject) => {
       let numberOfAnswer = 0
-      result.forEach(async snapshot => {
-        numberOfAnswer++
-        const question = await getQuestionById(uxerId, projectId, snapshot.data().question_key)
-        answer.push({
-          answer: {
-            id: snapshot.id,
-            question: question.data().question,
-            answer: snapshot.data().answer,
-            created_at: snapshot.data().created_at,
-            updated_at: snapshot.data().updated_at,
+      if (result.docs.length !== 0) {
+        result.forEach(async snapshot => {
+          numberOfAnswer++
+          const question = await getQuestionById(uxerId, projectId, snapshot.data().question_key)
+          answer.push({
+            answer: {
+              id: snapshot.id,
+              question: question.data().question,
+              answer: snapshot.data().answer,
+              created_at: snapshot.data().created_at,
+              updated_at: snapshot.data().updated_at,
+            }
+          })
+
+          if (numberOfAnswer === answer.length) {
+            resolve(answer)
           }
         })
-
-        if (numberOfAnswer === answer.length) {
-          resolve(answer)
-        }
-      })
+      } else {
+        resolve(answer)
+      }
     })
   })
 }
