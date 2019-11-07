@@ -61,14 +61,8 @@ async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, question
           experimentId: await getExperimenterId(uxerId, projectId, exper)
         })
 
-<<<<<<< HEAD
-        if (numberOfAnswer === answer.length) {
-          console.log(answer)
-          resolve(answer)
-=======
         if(numberOfHaveNote === experimenterId.length) {
           resolve(experimenterId)
->>>>>>> 31893ca59289793436235e68574dd371614c382e
         }
       }
     })
@@ -91,8 +85,6 @@ async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, question
 
                 answers.push({
                   questionId: snapshot.data().question_key,
-                  // question: questionData.data().question,
-                  // type_form: questionData.data().type_form,
                   answer: snapshot.data().answer
                 })
               })
