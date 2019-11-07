@@ -33,6 +33,7 @@ router.post('/:id/project/:proj_id/upload', experimentController.uploadData)
 router.delete('/:id/project/:proj_id/experimenter/:exper_id', requireAuth, experimentController.delete)
 
 router.get('/:id/project/:proj_id/summarize-note', requireAuth, summarizeController.getSumNote)
+router.get('/:id/project/:proj_id/summarize-recordTime', requireAuth, summarizeController.getAvgRecTime)
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.put('/:id/project/:proj_id/updatequestionnaire', requireAuth, questionnaireController.updateQuestionnaire)

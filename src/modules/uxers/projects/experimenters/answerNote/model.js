@@ -10,9 +10,6 @@ const collectionAnswer = 'answer_note'
 
 async function getAnswerNote(uxerId, projectId, realExperId) {
   const experimenterId = await getExperimenterId(uxerId, projectId, realExperId)
-  console.log('uxerId', uxerId)
-  console.log('projectId', projectId)
-  console.log('experimenterId', experimenterId)
   let answer = []
   return new Promise((resolve, reject) => {
     const ref = db.collection(collectionUxer).doc(uxerId)

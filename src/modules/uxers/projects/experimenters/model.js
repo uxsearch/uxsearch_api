@@ -61,6 +61,17 @@ async function getExperimenterId(uxerId, projectId, realExperId) {
   return experimenter
 }
 
+async function getTimeRecord(uxerId, projectId, realExperId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionExperiment).where('experimenter_key', '==', `${realExperId}`).get()
+  let time = undefined
+  ref.forEach(snapshot => {
+    time = snapshot.data().screen_time
+  })
+  return time
+}
+
 async function createExperimentRecord(uxerId, projectId, { experimenter_key, firstname, lastname, video_url, video_time, screen_url, screen_time }) {
   const created_at = new Date()
   const ref = await db.collection(collectionUxer).doc(uxerId)
@@ -122,6 +133,7 @@ async function deleteExperimenter(uxerId, projectId, experId) {
 export { 
   getExperimenterTest,
   getAllExperimenterKey,
+  getTimeRecord,
   createExperimentRecord,
   deleteExperimenter,
   uploadFile,

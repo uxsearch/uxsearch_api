@@ -1,7 +1,7 @@
 import firebase from 'api/firebase-config'
 import { db } from 'api/firebasehelper'
 import { getAllNoteId, getQuestionById } from 'api/modules/uxers/projects/questionnaires/model'
-import { getAllExperimenterKey } from 'api/modules/uxers/projects/experimenters/model'
+import { getAllExperimenterKey, getTimeRecord } from 'api/modules/uxers/projects/experimenters/model'
 import { getAllAnswerByQuestionId } from 'api/modules/uxers/projects/experimenters/answerNote/model'
 
 async function getSummarizeNote(uxerId, projectId, callback) {
@@ -69,10 +69,50 @@ async function getSummarizeNote(uxerId, projectId, callback) {
     } else {
       callback && callback(summaryState)
     }
-  } 
+  }
   else {
     callback && callback(summaryState)
   }
 }
 
-export { getSummarizeNote }
+async function getAverageRecordTime(uxerId, projectId, callback) {
+  let recordTime = []
+  const experimentersKey = await getAllExperimenterKey(uxerId, projectId)
+  if (experimentersKey.length !== 0) {
+    experimentersKey.forEach(async key => {
+      const timeDuration = await getTimeRecord(uxerId, projectId, key)
+      recordTime.push(timeDuration)
+
+      if (recordTime.length === experimentersKey.length) {
+        let avgTime = 0
+        for (let i = 0; i < recordTime.length; i++) {
+          const newValue = Math.floor(recordTime[i])
+          avgTime = avgTime + newValue
+        }
+
+        avgTime = avgTime / recordTime.length
+
+        if (avgTime > 60) {
+          let timeFormat
+          if (Math.floor(avgTime / 60) === 1) {
+            if (Math.floor(avgTime % 60) === 1) {
+              timeFormat = Math.floor(avgTime / 60) + ' minute ' + Math.floor(avgTime % 60) + ' second'
+            }
+            timeFormat = Math.floor(avgTime / 60) + ' minute ' + Math.floor(avgTime % 60) + ' seconds'
+          } else {
+            if (Math.floor(avgTime % 60) === 1) {
+              timeFormat = Math.floor(avgTime / 60) + ' minutes ' + Math.floor(avgTime % 60) + ' second'
+            }
+            timeFormat = Math.floor(avgTime / 60) + ' minutes ' + Math.floor(avgTime % 60) + ' seconds'
+          }
+          callback && callback(timeFormat)
+        } else {
+          const timeFormat = Math.floor(avgTime % 60) + ' seconds'
+          callback && callback(timeFormat)
+        }
+      }
+    })
+  }
+}
+
+export { getSummarizeNote, getAverageRecordTime }
