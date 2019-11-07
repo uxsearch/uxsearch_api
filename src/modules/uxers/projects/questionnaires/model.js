@@ -15,10 +15,20 @@ async function getAllQuestionnaire(uxerId, projectId) {
 }
 
 async function getQuestionById(uxerId, projectId, questionId) {
-  return await db.collection(collectionUxer).doc(uxerId)
+  const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
     .collection(collectionQuestionnaire).doc(questionId)
     .get()
+  let questionnaire = {}
+  const options = getOptions(uxerId, projectId, ref.id)
+  questionnaire = {
+    id: ref.id,
+    data: {
+      question: ref.data(),
+      options: await options,
+    }
+  }
+  return questionnaire
 }
 
 async function getQuestionnaire(uxerId, projectId) {
@@ -48,8 +58,8 @@ async function getQuestionnaire(uxerId, projectId) {
             }
           }
           numberOfQuestion++
-          if(numberOfQuestion === result.docs.length) {
-            if(questionnaires.length === 0) resolve(questionnaires)
+          if (numberOfQuestion === result.docs.length) {
+            if (questionnaires.length === 0) resolve(questionnaires)
           }
         })
       }).then(result => {
@@ -100,8 +110,8 @@ async function getNote(uxerId, projectId) {
             }
           }
           numberOfQuestion++
-          if(numberOfQuestion === result.docs.length) {
-            if(notes.length === 0) resolve(notes)
+          if (numberOfQuestion === result.docs.length) {
+            if (notes.length === 0) resolve(notes)
           }
         })
       }).then(result => {
@@ -204,4 +214,13 @@ async function deleteQuestion(uxerId, projectId, questionId) {
   else return 1
 }
 
-export { getQuestionnaire, getNote, updateQuestionnaire, updateNote, deleteQuestion, getQuestionById }
+export {
+  getQuestionnaire,
+  getNote,
+  getAllQuestionnaireId,
+  getAllNoteId,
+  updateQuestionnaire,
+  updateNote,
+  deleteQuestion,
+  getQuestionById
+}

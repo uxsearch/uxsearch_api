@@ -31,6 +31,18 @@ async function getExperimenterById(uxerId, projectId, realExperId) {
   return experimenter
 }
 
+async function getAllExperimenterKey(uxerId, projectId) {
+  const ref = await db.collection(collectionUxer).doc(uxerId)
+    .collection(collectionProject).doc(projectId)
+    .collection(collectionExperiment)
+    .get()
+  let experimenters = []
+  ref.forEach(snapshot => {
+    experimenters.push(snapshot.data().experimenter_key)
+  })
+  return experimenters
+}
+
 async function getExperimenterKey(uxerId, projectId, experId) {
   const ref = await db.collection(collectionUxer).doc(uxerId)
     .collection(collectionProject).doc(projectId)
@@ -107,4 +119,12 @@ async function deleteExperimenter(uxerId, projectId, experId) {
   else return 1
 }
 
-export { getExperimenterTest, createExperimentRecord, deleteExperimenter, uploadFile, getExperimenterId, getExperimenterById }
+export { 
+  getExperimenterTest,
+  getAllExperimenterKey,
+  createExperimentRecord,
+  deleteExperimenter,
+  uploadFile,
+  getExperimenterId,
+  getExperimenterById
+}

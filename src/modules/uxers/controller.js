@@ -35,7 +35,6 @@ export default {
         data: uxers,
         token: token
       }
-      console.log(uxers)
       res.send({ status: uxers ? statusCallback.SUCCESS : statusCallback.ERROR, uxers })
     } else {
       res.send({ status: statusCallback.ERROR })
