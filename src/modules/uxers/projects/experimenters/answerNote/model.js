@@ -10,6 +10,9 @@ const collectionAnswer = 'answer_note'
 
 async function getAnswerNote(uxerId, projectId, realExperId) {
   const experimenterId = await getExperimenterId(uxerId, projectId, realExperId)
+  console.log('uxerId', uxerId)
+  console.log('projectId', projectId)
+  console.log('experimenterId', experimenterId)
   let answer = []
   return new Promise((resolve, reject) => {
     const ref = db.collection(collectionUxer).doc(uxerId)
@@ -26,7 +29,7 @@ async function getAnswerNote(uxerId, projectId, realExperId) {
         answer.push({
           answer: {
             id: snapshot.id,
-            question: question.data().question,
+            question: question.data().question_key,
             answer: snapshot.data().answer,
             created_at: snapshot.data().created_at,
             updated_at: snapshot.data().updated_at,
@@ -34,6 +37,7 @@ async function getAnswerNote(uxerId, projectId, realExperId) {
         })
 
         if (numberOfAnswer === answer.length) {
+          console.log(answer)
           resolve(answer)
         }
       })
