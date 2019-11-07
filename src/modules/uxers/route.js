@@ -2,6 +2,7 @@ import express from 'express'
 import uxersController from 'api/modules/uxers/controller'
 import projectController from 'api/modules/uxers/projects/controller'
 import experimentController from 'api/modules/uxers/projects/experimenters/controller'
+import summarizeController from 'api/modules/uxers/projects/summarize/controller'
 import questionnaireController from 'api/modules/uxers/projects/questionnaires/controller'
 import optionController from 'api/modules/uxers/projects/questionnaires/options/controller'
 import answerQuestionController from 'api/modules/uxers/projects/experimenters/answerQuesionnaire/controller'
@@ -30,6 +31,8 @@ router.get('/:id/project/:proj_id/experimenter/:exper_id', requireAuth, experime
 router.post('/:id/project/:proj_id/record', experimentController.createRecord)
 router.post('/:id/project/:proj_id/upload', experimentController.uploadData)
 router.delete('/:id/project/:proj_id/experimenter/:exper_id', requireAuth, experimentController.delete)
+
+router.get('/:id/project/:proj_id/summarize-note', requireAuth, summarizeController.getSumNote)
 
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.put('/:id/project/:proj_id/updatequestionnaire', requireAuth, questionnaireController.updateQuestionnaire)
