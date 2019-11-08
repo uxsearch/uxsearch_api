@@ -26,7 +26,7 @@ async function getAnswerQuestion(uxerId, projectId, realExperId) {
         answer.push({
           answer: {
             id: snapshot.id,
-            question: question.data().question,
+            question: question.data.question.question,
             answer: snapshot.data().answer,
             created_at: snapshot.data().created_at
           },

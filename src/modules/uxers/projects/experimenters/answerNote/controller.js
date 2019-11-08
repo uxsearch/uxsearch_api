@@ -8,12 +8,11 @@ const statusCallback = {
 }
 
 export default {
-  getOne: async (req, res) => {
+  getAnswerNote: async (req, res) => {
     const uxerId = req.user.uid
     const projectId = req.params.proj_id
     const experimenterId = req.params.exper_id
-    const noteId = req.params.note_id
-    const answer = await getAnswerNote(uxerId, projectId, experimenterId, noteId)
+    const answer = await getAnswerNote(uxerId, projectId, experimenterId)
     res.send(answer)
   },
   update: async (req, res) => {

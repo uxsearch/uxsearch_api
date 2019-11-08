@@ -2,6 +2,7 @@ import express from 'express'
 import uxersController from 'api/modules/uxers/controller'
 import projectController from 'api/modules/uxers/projects/controller'
 import experimentController from 'api/modules/uxers/projects/experimenters/controller'
+import summarizeController from 'api/modules/uxers/projects/summarize/controller'
 import questionnaireController from 'api/modules/uxers/projects/questionnaires/controller'
 import optionController from 'api/modules/uxers/projects/questionnaires/options/controller'
 import answerQuestionController from 'api/modules/uxers/projects/experimenters/answerQuesionnaire/controller'
@@ -13,6 +14,7 @@ const router = express.Router()
 
 // router.get('/:id', requireAuth, uxersController.getUxerById)
 // router.post('/add', requireAuth, uxersController.create)
+router.post('/:id/upload', requireAuth, uxersController.upload)
 router.put('/:id/update', requireAuth, uxersController.update)
 router.delete('/delete', requireAuth, uxersController.delete)
 
@@ -30,6 +32,9 @@ router.post('/:id/project/:proj_id/record', experimentController.createRecord)
 router.post('/:id/project/:proj_id/upload', experimentController.uploadData)
 router.delete('/:id/project/:proj_id/experimenter/:exper_id', requireAuth, experimentController.delete)
 
+router.get('/:id/project/:proj_id/summarize-note', requireAuth, summarizeController.getSumNote)
+router.get('/:id/project/:proj_id/summarize-recordTime', requireAuth, summarizeController.getAvgRecTime)
+
 router.get('/:id/project/:proj_id/questionnaire', questionnaireController.getQuestionnaire)
 router.put('/:id/project/:proj_id/updatequestionnaire', requireAuth, questionnaireController.updateQuestionnaire)
 router.get('/:id/project/:proj_id/test-note', requireAuth, questionnaireController.getNote)
@@ -39,7 +44,7 @@ router.delete('/:id/project/:proj_id/question/:questionId/delete-option', requir
 
 router.get('/:id/project/:proj_id/experimenter/:exper_id/answers-questionnaire', answerQuestionController.getAnswerQuestionnaire)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-question/update', answerQuestionController.update)
-router.get('/:id/project/:proj_id/experimenter/:exper_id/note/:note_id/answer', requireAuth, answerNoteController.getOne)
+router.get('/:id/project/:proj_id/experimenter/:exper_id/answer-note', requireAuth, answerNoteController.getAnswerNote)
 router.put('/:id/project/:proj_id/experimenter/:exper_id/answer-note/update', requireAuth, answerNoteController.update)
 
 export default router
