@@ -5,18 +5,22 @@ import { getAllExperimenterKey, getTimeRecord } from 'api/modules/uxers/projects
 import { getAllAnswerByQuestionId } from 'api/modules/uxers/projects/experimenters/answerNote/model'
 
 async function getSummarizeNote(uxerId, projectId, callback) {
-  let summaryState = []
+  let summaryState = {
+    allExper: 0,
+    takeNoteExper: 0,
+    summary: []
+  }
   const questionsId = await getAllNoteId(uxerId, projectId)
   if (questionsId.length !== 0) {
     const experimentersKey = await getAllExperimenterKey(uxerId, projectId)
-
+    summaryState.allExper = experimentersKey.length
     if (experimentersKey.length !== 0) {
       questionsId.forEach(async question => {
         const questionData = await getQuestionById(uxerId, projectId, question)
 
         if (questionData.data.question.type_form === 'textbox') {
 
-          summaryState.push({
+          summaryState.summary.push({
             questionId: questionData.id,
             question: questionData.data.question.question,
             type_form: questionData.data.question.type_form,
@@ -27,11 +31,10 @@ async function getSummarizeNote(uxerId, projectId, callback) {
           let optionArr = []
           let answerArr = []
           questionData.data.options.forEach((option, index) => {
-
             optionArr.push(option.data.option)
             answerArr.push(0)
           })
-          summaryState.push({
+          summaryState.summary.push({
             questionId: questionData.id,
             question: questionData.data.question.question,
             type_form: questionData.data.question.type_form,
@@ -40,30 +43,36 @@ async function getSummarizeNote(uxerId, projectId, callback) {
           })
         }
 
-        if (questionsId.length === summaryState.length) {
+        if (questionsId.length === summaryState.summary.length) {
           const summarize = await getAllAnswerByQuestionId(uxerId, projectId, experimentersKey, questionsId)
-          summarize.forEach((sum, index) => {
-            summaryState.forEach(state => {
-              if (sum.questionId === state.questionId) {
-                if (state.type_form === 'textbox') {
-                  state.answer = [...state.answer, sum.answer]
-                } else if (state.type_form === 'multiple') {
-                  const indexData = state.options.indexOf(sum.answer)
-                  state.answer[indexData]++
-                } else if (state.type_form === 'checkbox') {
-                  sum.answer.forEach(answer => {
-                    const indexData = state.options.indexOf(answer)
+          summaryState.takeNoteExper = summarize.numberTakeNote
+          if (summarize.numberTakeNote !== 0){
+            summarize.answers.forEach((sum, index) => {
+              summaryState.summary.forEach(state => {
+                if (sum.questionId === state.questionId) {
+                  if (state.type_form === 'textbox') {
+                    state.answer = [...state.answer, sum.answer]
+                  } else if (state.type_form === 'multiple') {
+                    const indexData = state.options.indexOf(sum.answer)
                     state.answer[indexData]++
-                  })
+                  } else if (state.type_form === 'checkbox') {
+                    sum.answer.forEach(answer => {
+                      const indexData = state.options.indexOf(answer)
+                      state.answer[indexData]++
+                    })
+                  }
                 }
+              })
+  
+              if (index === summarize.answers.length - 1) {
+                callback && callback(summaryState)
+              } else if (summarize === undefined) {
+  
               }
             })
-
-            if (index === summarize.length - 1) {
-
-              callback && callback(summaryState)
-            }
-          })
+          } else {
+            callback && callback(summaryState)
+          }
         }
       })
     } else {
