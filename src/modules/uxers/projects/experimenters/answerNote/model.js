@@ -52,23 +52,31 @@ async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, question
     answers: [],
   }
   return new Promise((resolve, reject) => {
-    let numberOfHaveNote = 0
-    realExperId.forEach(async exper => {
-      const haveAnsNote = await getAnswerNote(uxerId, projectId, exper)
-      if(haveAnsNote.length !== 0) {
-        numberOfHaveNote++
-        experimenterId.push({
-          experimentId: await getExperimenterId(uxerId, projectId, exper)
-        })
+    if (realExperId.length !== 0) {
+      let numberOfHaveNote = 0
+      let numberNotHaveNote = 0
+      realExperId.forEach(async (exper, index) => {
+        const haveAnsNote = await getAnswerNote(uxerId, projectId, exper)
+        if (haveAnsNote.length !== 0) {
+          numberOfHaveNote++
+          experimenterId.push({
+            experimentId: await getExperimenterId(uxerId, projectId, exper)
+          })
 
-        if(numberOfHaveNote === experimenterId.length) {
-          answers.numberTakeNote = experimenterId.length
-          resolve(experimenterId)
+          if (numberOfHaveNote === experimenterId.length) {
+            answers.numberTakeNote = experimenterId.length
+            resolve(experimenterId)
+          }
+        } else {
+          numberNotHaveNote++
+          if(numberNotHaveNote === realExperId.length - numberOfHaveNote) {
+            resolve(experimenterId)
+          }
         }
-      } else if (haveAnsNote.length === 0) {
-        resolve(experimenterId)
-      }
-    })
+      })
+    } else {
+      resolve(experimenterId)
+    }
   }).then(result => {
     return new Promise((resolve, reject) => {
       if (result.length !== 0) {
@@ -78,7 +86,8 @@ async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, question
               .collection(collectionProject).doc(projectId)
               .collection(collectionExperimenter).doc(experId.experimentId)
               .collection(collectionAnswer)
-              .where('question_key', '==', question).get()
+              .where('question_key', '==', question)
+              .get()
 
             if (ref.docs.length !== 0) {
               ref.forEach(async snapshot => {
@@ -89,7 +98,7 @@ async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, question
               })
             }
 
-            if(answers.answers.length === result.length * questionId.length) {
+            if (answers.answers.length === result.length * questionId.length) {
               resolve(answers)
             }
           })

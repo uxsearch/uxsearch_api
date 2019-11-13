@@ -17,7 +17,6 @@ async function getSummarizeNote(uxerId, projectId, callback) {
     if (experimentersKey.length !== 0) {
       questionsId.forEach(async question => {
         const questionData = await getQuestionById(uxerId, projectId, question)
-
         if (questionData.data.question.type_form === 'textbox') {
 
           summaryState.summary.push({
@@ -46,7 +45,7 @@ async function getSummarizeNote(uxerId, projectId, callback) {
         if (questionsId.length === summaryState.summary.length) {
           const summarize = await getAllAnswerByQuestionId(uxerId, projectId, experimentersKey, questionsId)
           summaryState.takeNoteExper = summarize.numberTakeNote
-          if (summarize.numberTakeNote !== 0){
+          if (summarize.numberTakeNote !== 0) {
             summarize.answers.forEach((sum, index) => {
               summaryState.summary.forEach(state => {
                 if (sum.questionId === state.questionId) {
@@ -63,7 +62,6 @@ async function getSummarizeNote(uxerId, projectId, callback) {
                   }
                 }
               })
-  
               if (index === summarize.answers.length - 1) {
                 callback && callback(summaryState)
               }
