@@ -66,8 +66,6 @@ async function getSummarizeNote(uxerId, projectId, callback) {
   
               if (index === summarize.answers.length - 1) {
                 callback && callback(summaryState)
-              } else if (summarize === undefined) {
-  
               }
             })
           } else {
