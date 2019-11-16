@@ -16,7 +16,7 @@ async function getSummarizeNote(uxerId, projectId, callback) {
     summaryState.allExper = experimentersKey.length
     if (experimentersKey.length !== 0) {
       questionsId.forEach(async question => {
-        const questionData = await getQuestionById(uxerId, projectId, question)
+        const questionData = await getQuestionById(uxerId, projectId, question.id)
         if (questionData.data.question.type_form === 'textbox') {
 
           summaryState.summary.push({

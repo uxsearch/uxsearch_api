@@ -86,7 +86,7 @@ async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, question
               .collection(collectionProject).doc(projectId)
               .collection(collectionExperimenter).doc(experId.experimentId)
               .collection(collectionAnswer)
-              .where('question_key', '==', question)
+              .where('question_key', '==', question.id)
               .get()
 
             if (ref.docs.length !== 0) {
