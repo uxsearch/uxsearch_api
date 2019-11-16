@@ -134,12 +134,9 @@ async function getAllNoteId(uxerId, projectId) {
     noteId.push({id: snapshot.id, updated_at: snapshot.data().updated_at})
   })
   noteId.sort((a, b) => {
-    console.log('a', a)
-    console.log('b', b)
     if (a.updated_at.seconds > b.updated_at.seconds) return 1
     else return -1
   })
-  console.log('finish')
   return noteId
 }
 
