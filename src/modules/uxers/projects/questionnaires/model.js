@@ -131,7 +131,11 @@ async function getAllNoteId(uxerId, projectId) {
     .get()
   let noteId = []
   ref.forEach(snapshot => {
-    noteId.push(snapshot.id)
+    noteId.push({id: snapshot.id, updated_at: snapshot.data().updated_at})
+  })
+  noteId.sort((a, b) => {
+    if (a.updated_at.seconds > b.updated_at.seconds) return 1
+    else return -1
   })
   return noteId
 }

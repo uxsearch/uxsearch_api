@@ -47,47 +47,58 @@ async function getAnswerNote(uxerId, projectId, realExperId) {
 
 async function getAllAnswerByQuestionId(uxerId, projectId, realExperId, questionId) {
   let experimenterId = []
-  let answers = []
+  let answers = {
+    numberTakeNote: 0,
+    answers: [],
+  }
   return new Promise((resolve, reject) => {
-    let numberOfHaveNote = 0
-    realExperId.forEach(async exper => {
-      const haveAnsNote = await getAnswerNote(uxerId, projectId, exper)
-      if(haveAnsNote.length !== 0) {
-        numberOfHaveNote++
-        experimenterId.push({
-          experimentId: await getExperimenterId(uxerId, projectId, exper)
-        })
+    if (realExperId.length !== 0) {
+      let numberOfHaveNote = 0
+      let numberNotHaveNote = 0
+      realExperId.forEach(async (exper, index) => {
+        const haveAnsNote = await getAnswerNote(uxerId, projectId, exper)
+        if (haveAnsNote.length !== 0) {
+          numberOfHaveNote++
+          experimenterId.push({
+            experimentId: await getExperimenterId(uxerId, projectId, exper)
+          })
 
-        if(numberOfHaveNote === experimenterId.length) {
-          resolve(experimenterId)
+          if (numberOfHaveNote === experimenterId.length) {
+            answers.numberTakeNote = experimenterId.length
+            resolve(experimenterId)
+          }
+        } else {
+          numberNotHaveNote++
+          if(numberNotHaveNote === realExperId.length - numberOfHaveNote) {
+            resolve(experimenterId)
+          }
         }
-      }
-    })
+      })
+    } else {
+      resolve(experimenterId)
+    }
   }).then(result => {
     return new Promise((resolve, reject) => {
       if (result.length !== 0) {
-        let allExperAnsLength = 0
         result.forEach(experId => {
           questionId.forEach(async (question, index) => {
             const ref = await db.collection(collectionUxer).doc(uxerId)
               .collection(collectionProject).doc(projectId)
               .collection(collectionExperimenter).doc(experId.experimentId)
               .collection(collectionAnswer)
-              .where('question_key', '==', question).get()
+              .where('question_key', '==', question.id)
+              .get()
 
             if (ref.docs.length !== 0) {
-              allExperAnsLength++
-
               ref.forEach(async snapshot => {
-
-                answers.push({
+                answers.answers.push({
                   questionId: snapshot.data().question_key,
                   answer: snapshot.data().answer
                 })
               })
             }
 
-            if(answers.length === result.length * questionId.length) {
+            if (answers.answers.length === result.length * questionId.length) {
               resolve(answers)
             }
           })
